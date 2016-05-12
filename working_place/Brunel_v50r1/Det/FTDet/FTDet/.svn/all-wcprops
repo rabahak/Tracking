@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/guest/lhcb/!svn/ver/201152/LHCb/trunk/Det/FTDet/FTDet
+END
+DeFTBiLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/guest/lhcb/!svn/ver/141331/LHCb/trunk/Det/FTDet/FTDet/DeFTBiLayer.h
+END
+DeFTDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/guest/lhcb/!svn/ver/200908/LHCb/trunk/Det/FTDet/FTDet/DeFTDetector.h
+END
+DeFTFibreMat.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/guest/lhcb/!svn/ver/201152/LHCb/trunk/Det/FTDet/FTDet/DeFTFibreMat.h
+END
+DeFTLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/guest/lhcb/!svn/ver/201088/LHCb/trunk/Det/FTDet/FTDet/DeFTLayer.h
+END
+DeFTFibreModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/guest/lhcb/!svn/ver/158448/LHCb/trunk/Det/FTDet/FTDet/DeFTFibreModule.h
+END
+DeFTStation.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/guest/lhcb/!svn/ver/201088/LHCb/trunk/Det/FTDet/FTDet/DeFTStation.h
+END
+DeFTModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/guest/lhcb/!svn/ver/201088/LHCb/trunk/Det/FTDet/FTDet/DeFTModule.h
+END

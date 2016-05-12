@@ -1,0 +1,10 @@
+libPrAlgorithms.so:PrDownstream
+libPrAlgorithms.so:PrFTHitManager
+libPrAlgorithms.so:PrForwardTool
+libPrAlgorithms.so:PrForwardTracking
+libPrAlgorithms.so:PrGeometryTool
+libPrAlgorithms.so:PrHybridSeeding
+libPrAlgorithms.so:PrMatch
+libPrAlgorithms.so:PrMatchNN
+libPrAlgorithms.so:PrMatchTool
+libPrAlgorithms.so:PrMatchToolNN

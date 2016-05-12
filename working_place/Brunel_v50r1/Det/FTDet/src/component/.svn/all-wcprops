@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/guest/lhcb/!svn/ver/200908/LHCb/trunk/Det/FTDet/src/component
+END
+XmlDeFTModuleCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTModuleCnv.cpp
+END
+XmlDeFTBiLayerCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTBiLayerCnv.cpp
+END
+XmlDeFTDetectorCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTDetectorCnv.cpp
+END
+XmlDeFTFibreMatCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTFibreMatCnv.cpp
+END
+DeFTTestAlg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/guest/lhcb/!svn/ver/200908/LHCb/trunk/Det/FTDet/src/component/DeFTTestAlg.cpp
+END
+XmlDeFTLayerCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTLayerCnv.cpp
+END
+XmlDeFTFibreModuleCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTFibreModuleCnv.cpp
+END
+DeFTTestAlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/guest/lhcb/!svn/ver/160569/LHCb/trunk/Det/FTDet/src/component/DeFTTestAlg.h
+END
+XmlDeFTStationCnv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/guest/lhcb/!svn/ver/192969/LHCb/trunk/Det/FTDet/src/component/XmlDeFTStationCnv.cpp
+END

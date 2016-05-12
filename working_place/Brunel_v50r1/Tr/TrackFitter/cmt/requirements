@@ -1,0 +1,36 @@
+#=====================================================================
+# Created    : 21/03/2002
+# Maintainer : Wouter Hulsbergen
+#=====================================================================
+
+package           TrackFitter
+version           v5r8
+
+# Structure, i.e. directories to process. 
+#=====================================================================
+branches          cmt doc src
+
+# Used packages
+#=====================================================================
+use     TrackEvent      v*      Event
+use     TrackFitEvent	v*      Tr
+use     TrackInterfaces	v*      Tr
+use     TrackKernel	v*      Tr
+use     LHCbMath        v*      Kernel
+use     GaudiAlg        v*
+use     GaudiKernel     v*
+use     GSL             v*      LCG_Interfaces
+
+# Component library building rule
+#=====================================================================
+library          TrackFitter    ../src/*.cpp
+
+# define component library link options
+#=====================================================================
+apply_pattern component_library library=TrackFitter
+
+#private
+#macro_append cppflags " -g "
+#macro_remove cppoptimized_s "-O2"
+
+apply_pattern install_python_modules

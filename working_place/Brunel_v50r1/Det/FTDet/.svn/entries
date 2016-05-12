@@ -1,0 +1,80 @@
+10
+
+dir
+205808
+http://svn.cern.ch/guest/lhcb/LHCb/trunk/Det/FTDet
+http://svn.cern.ch/guest/lhcb
+
+
+
+2016-03-16T07:50:56.107382Z
+203062
+cattanem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4525493e-7705-40b1-a816-d608a930855b
+
+tests
+dir
+
+cmt
+dir
+
+dict
+dir
+
+doc
+dir
+
+FTDet
+dir
+
+src
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2016-05-11T10:55:12.127544Z
+8af43fc805416780aba65999ed167ca8
+2016-03-16T07:50:56.107382Z
+203062
+cattanem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1315
+

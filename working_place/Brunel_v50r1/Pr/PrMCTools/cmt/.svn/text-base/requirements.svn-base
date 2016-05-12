@@ -1,0 +1,32 @@
+#=====================================================================
+# Created    : 2012-03-22
+# Maintainer : Michel De Cian
+#=====================================================================
+package           PrMCTools
+version           v2r12
+
+#=====================================================================
+# Structure, i.e. directories to process. 
+#=====================================================================
+branches          cmt doc src
+#=====================================================================
+# Used packages
+#=====================================================================
+use   GaudiAlg          v*
+use   MCEvent           v*   Event
+use   FTEvent           v*   Event
+use   LinkerEvent       v*   Event
+use   PrKernel          v*   Pr
+use   VPDet             v*   Det
+use   TrackInterfaces   v*   Tr
+use   LoKiMC            v*   Phys
+
+include_path      none
+#=====================================================================
+# Component library building rule
+#=====================================================================
+library          PrMCTools    ../src/*.cpp 
+#=====================================================================
+# define component library link options
+#=====================================================================
+apply_pattern    component_library library=PrMCTools

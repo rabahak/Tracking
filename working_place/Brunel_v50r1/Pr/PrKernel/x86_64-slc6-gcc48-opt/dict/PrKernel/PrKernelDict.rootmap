@@ -1,0 +1,10 @@
+[ libPrKernelDict.so ]
+# List of selected classes
+class IPrCounter
+class IPrDebugTool
+class IPrDebugUTTool
+class IPrUTCounter
+header PrKernel/IPrCounter.h
+header PrKernel/IPrDebugTool.h
+header PrKernel/IPrDebugUTTool.h
+header PrKernel/IPrUTCounter.h

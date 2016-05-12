@@ -1,0 +1,83 @@
+#===============================================================================
+# Building package Pr/PrMCTools [3/5]
+#===============================================================================
+Wed May 11 14:30:37 CEST 2016
+v2r12 Pr/PrMCTools
+# Building group all
+#CMT---> Info: Execute action make => gmake bin=../x86_64-slc6-gcc48-opt/ all
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/x86_64-slc6-gcc48-opt.make
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/setup.make
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/constituents.make
+#CMT---> (constituents.make) Rebuilding library links
+#CMT---> (constituents.make) all done
+#CMT---> (constituents.make) Building PrMCTools.make
+#CMT---> Info: Library PrMCTools
+#CMT---> (constituents.make) Starting PrMCTools
+#CMT---> PrMCTools : library ok
+#CMT---> installation done
+#CMT---> PrMCTools ok
+#CMT---> (constituents.make) PrMCTools done
+#CMT---> (constituents.make) Building PrMCToolsConf.make
+#CMT---> (constituents.make) Building PrMCToolsComponentsList.make
+#CMT---> Info: Document PrMCToolsConf
+#CMT---> (constituents.make) Creating PrMCToolsConf.lock and Starting PrMCToolsConf
+#CMT---> Info: Document PrMCToolsComponentsList
+#CMT---> (constituents.make) Creating PrMCToolsComponentsList.lock and Starting PrMCToolsComponentsList
+#CMT---> (constituents.make) PrMCToolsComponentsList done
+#CMT---> (constituents.make) Building PrMCToolsMergeComponentsList.make
+:::::: libraries : [ PrMCTools ] ::::::
+:::: processing library: PrMCTools...
+ - component: PrCheatedSciFiTracking (Algorithm)
+ - component: PrCheatedVP (Algorithm)
+ - component: PrCheatedVelo (Algorithm)
+ - component: PrChecker (Algorithm)
+ - component: PrChecker2 (Algorithm)
+ - component: PrClustersResidual (Algorithm)
+SUCCESS ***In the Constructor 
+m_zone24
+ - component: PrCounter (AlgTool)
+ - component: PrCounter2 (AlgTool)
+ - component: PrDebugTrackingLosses (Algorithm)
+ - component: PrLHCbID2MCParticle (Algorithm)
+ - component: PrPixelDebugTool (AlgTool)
+ - component: PrPlotFTHits (Algorithm)
+ - component: PrTStationDebugTool (AlgTool)
+ - component: PrTTCounter (AlgTool)
+ - component: PrTrackAssociator (Algorithm)
+ - component: PrVeloUTChecker (Algorithm)
+:::::: libraries : [ PrMCTools ] :::::: [DONE]
+Installing /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/Pr/PrMCTools/x86_64-slc6-gcc48-opt/genConf/PrMCTools in /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/python
+Copy '../../../../Pr/PrMCTools/x86_64-slc6-gcc48-opt/genConf/PrMCTools/PrMCToolsConf.py' -> '/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/python/PrMCTools/PrMCToolsConf.py'
+#CMT---> (constituents.make) PrMCToolsConf done
+#CMT---> (constituents.make) Building PrMCTools_python_init.make
+#CMT---> (constituents.make) Building PrMCToolsConfDbMerge.make
+#CMT---> Info: Document PrMCToolsMergeComponentsList
+#CMT---> (constituents.make) Creating PrMCToolsMergeComponentsList.lock and Starting PrMCToolsMergeComponentsList
+#CMT---> (constituents.make) PrMCToolsMergeComponentsList done
+#CMT---> Info: Document PrMCToolsConfDbMerge
+#CMT---> (constituents.make) Creating PrMCToolsConfDbMerge.lock and Starting PrMCToolsConfDbMerge
+#CMT---> Info: Document PrMCTools_python_init
+#CMT---> (constituents.make) Creating PrMCTools_python_init.lock and Starting PrMCTools_python_init
+Running merge_genconfDb  PrMCToolsConfDbMerge
+#CMT---> (constituents.make) PrMCTools_python_init done
+INFO:LockFile:2016-05-11_14:30:48 - Locking on /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/gaudi_build_lock
+INFO:LockFile:2016-05-11_14:30:48 - Lock on /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/gaudi_build_lock released
+#CMT---> (constituents.make) PrMCToolsConfDbMerge done
+#CMT---> (constituents.make) Building zip_PrMCTools_python_modules.make
+#CMT---> Info: Document zip_PrMCTools_python_modules
+#CMT---> (constituents.make) Creating zip_PrMCTools_python_modules.lock and Starting zip_PrMCTools_python_modules
+INFO:LockFile:2016-05-11_14:30:49 - Locking on /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/gaudi_build_lock
+INFO:zipdir:Zipping directory '/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/python'
+INFO:zipdir: M -> PrMCTools/PrMCToolsConf.py
+INFO:zipdir:File '/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/python.zip' closed
+INFO:LockFile:2016-05-11_14:30:49 - Lock on /users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/gaudi_build_lock released
+#CMT---> (constituents.make) zip_PrMCTools_python_modules done
+#CMT---> all ok.
+Wed May 11 14:30:49 CEST 2016
+# Building group cmt_actions
+#CMT---> Info: Execute action make => gmake bin=../x86_64-slc6-gcc48-opt/ cmt_actions
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/x86_64-slc6-gcc48-opt.make
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/setup.make
+#CMT---> (Makefile.header) Rebuilding ../x86_64-slc6-gcc48-opt/constituents.make
+#CMT---> cmt_actions ok.
+Wed May 11 14:30:57 CEST 2016

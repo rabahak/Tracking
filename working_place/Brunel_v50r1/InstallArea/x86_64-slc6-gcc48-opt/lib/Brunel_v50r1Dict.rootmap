@@ -1,0 +1,45 @@
+
+
+# --Beg FTDetDict.rootmap
+# --Date inserted: 2016-05-11 14:30:27.162227
+{ decls }
+namespace std {  }
+
+[ libFTDetDict.so ]
+# List of selected classes
+class DeFTBiLayer
+class DeFTDetector
+class DeFTFibreMat
+class DeFTFibreModule
+class DeFTLayer
+class DeFTModule
+class DeFTStation
+class vector<DeFTBiLayer*>
+class vector<DeFTFibreMat*>
+class vector<DeFTFibreModule*>
+class vector<DeFTLayer*>
+class vector<DeFTModule*>
+class vector<DeFTStation*>
+header FTDet/DeFTBiLayer.h
+header FTDet/DeFTDetector.h
+header FTDet/DeFTFibreMat.h
+header FTDet/DeFTFibreModule.h
+header FTDet/DeFTLayer.h
+header FTDet/DeFTModule.h
+header FTDet/DeFTStation.h
+# --End FTDetDict.rootmap
+
+
+# --Beg PrKernelDict.rootmap
+# --Date inserted: 2016-05-11 14:30:27.296488
+[ libPrKernelDict.so ]
+# List of selected classes
+class IPrCounter
+class IPrDebugTool
+class IPrDebugUTTool
+class IPrUTCounter
+header PrKernel/IPrCounter.h
+header PrKernel/IPrDebugTool.h
+header PrKernel/IPrDebugUTTool.h
+header PrKernel/IPrUTCounter.h
+# --End PrKernelDict.rootmap

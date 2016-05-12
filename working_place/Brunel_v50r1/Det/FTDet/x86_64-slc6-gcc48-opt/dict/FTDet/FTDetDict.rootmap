@@ -1,0 +1,25 @@
+{ decls }
+namespace std {  }
+
+[ libFTDetDict.so ]
+# List of selected classes
+class DeFTBiLayer
+class DeFTDetector
+class DeFTFibreMat
+class DeFTFibreModule
+class DeFTLayer
+class DeFTModule
+class DeFTStation
+class vector<DeFTBiLayer*>
+class vector<DeFTFibreMat*>
+class vector<DeFTFibreModule*>
+class vector<DeFTLayer*>
+class vector<DeFTModule*>
+class vector<DeFTStation*>
+header FTDet/DeFTBiLayer.h
+header FTDet/DeFTDetector.h
+header FTDet/DeFTFibreMat.h
+header FTDet/DeFTFibreModule.h
+header FTDet/DeFTLayer.h
+header FTDet/DeFTModule.h
+header FTDet/DeFTStation.h
