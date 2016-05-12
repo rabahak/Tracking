@@ -269,6 +269,9 @@ StatusCode PrHybridSeeding::initialize() {
     m_timeConvert[0] = m_timerTool->addTimer("Convert Tracks Up");
     m_timeConvert[1] = m_timerTool->addTimer("Convert Tracks Down");
     m_timerTool->decreaseIndent();//0
+
+    //Test
+    m_timeXProjeTotal = m_timerTool->addTimer( "Total findXProjections time");
   }
 
   if(UNLIKELY(m_printSettings)){
@@ -500,6 +503,22 @@ StatusCode PrHybridSeeding::execute() {
   //========================================================
   //------------------MAIN SEQUENCE IS HERE-----------------
   //========================================================
+
+
+  //---------------------TEST: Measure of total time (xprojections)-----------------
+  
+  m_timerTool->start( m_timeXProjeTotal);
+  for( unsigned int part= 0; 2 > part; ++part ){
+  for(unsigned int icase = 0; m_nCases > icase ; ++icase){
+    findXProjections(part,icase);
+  }}
+  m_timerTool->stop( m_timeXProjeTotal);
+
+
+
+  //--------------------------------------------------------------------------------
+
+
   // ----- Loop through lower and upper half
   for( unsigned int part= 0; 2 > part; ++part ){
     //----- Loop For difference Cases
@@ -519,14 +538,32 @@ StatusCode PrHybridSeeding::execute() {
       
       if(UNLIKELY(m_doTiming)){
         if( part ==0){
-          m_timerTool->stop( m_timeXProjeUp[icase]);
+          //timeStorage_xProj+=m_timerTool->stop( m_timeXProjeUp[icase]);
+	  m_timerTool->stop( m_timeXProjeUp[icase]);
           m_timerTool->start( m_timeCloneXUp[icase]);
+
+
+	  //TEST
+	  /*info()<<"Case: "<<icase<<" and part: "<<part<<" timeStorage_xProj= "<<timeStorage_xProj<<endmsg;
+	    info()<<"Case: "<<icase<<" and part: "<<part<<" m_timerTool->stop()= "<<m_timerTool->stop( m_timeXProjeUp[icase])<<endmsg;*/
+
+
         }else{
-          m_timerTool->stop( m_timeXProjeDo[icase]);
+          //timeStorage_xProj+=m_timerTool->stop( m_timeXProjeDo[icase]);
+	  m_timerTool->stop( m_timeXProjeDo[icase]);
           m_timerTool->start(m_timeCloneXDo[icase]);
+
+
+	  //TEST
+	  /*info()<<"Case: "<<icase<<" and part: "<<part<<" timeStorage_xProj= "<<timeStorage_xProj<<endmsg;
+	    info()<<"Case: "<<icase<<" and part: "<<part<<" m_timerTool->stop()= "<<m_timerTool->stop( m_timeXProjeDo[icase])<<endmsg;*/
+
+
         }
       }
-      
+      //--------------------------------TOTAL TIME OF XPROJECTION----------------------------------
+      //timeStorage_xProj+=  m_timerTool->stop( m_timeXProjeUp[icase]) +  m_timerTool->stop( m_timeXProjeDo[icase]);
+      //--------------------------------TOTAL TIME OF XPROJECTION----------------------------------
       if(m_removeClonesX) removeClonesX( part, icase, m_xOnly);
       if( UNLIKELY(m_doTiming)){
         
@@ -568,6 +605,18 @@ StatusCode PrHybridSeeding::execute() {
       }
     }
   }
+  //
+
+  /*
+if(UNLIKELY(m_doTiming)){
+  std::cout<<"The total duration of findXProjections is = "<<timeStorage_xProj<<std::endl;}
+  */
+
+
+
+
+
+
   for( unsigned int part = 0 ; part<2; part ++){ 
     if(UNLIKELY(m_doTiming)){
       m_timerTool->start( m_timeClone[(int)part]);

@@ -405,7 +405,13 @@ private:
   
   std::vector<PrHitZone*>        m_zones;
   float m_zReference;
+  // Test
+  //double timeStorage_xProj=0;
+  //
   ISequencerTimerTool* m_timerTool;
+  //test _Rabah
+  int m_timeXProjeTotal;
+
   int            m_timeTotal;
   int            m_timeFromForward;
   int            m_timeXProjeUp[3];
