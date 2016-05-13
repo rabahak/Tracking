@@ -1,0 +1,14 @@
+.*
+!/.gitignore
+*.make
+*.makesav
+*.stamp
+*.d
+*.o
+*.pcm
+*.cmtref
+*.pyc
+*.log
+*.so
+*.confdb
+*.a

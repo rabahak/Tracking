@@ -89,7 +89,7 @@ GaudiAlgorithm(name,pSvcLocator),
   //Case2 : 1st = T1-1X Last = T3-1X
   //Hits in T3 are collected accrding to txInf = x1st/Z1st;
   declareProperty( "L0_AlphaCorr"     , m_alphaCorrection = {120.64,510.64,730.64});
-  declareProperty( "L0_tolHp"         , m_TolFirstLast = {280.0,540.0,1080.0});
+  declareProperty( "L0_tolHp"         , m_TolFirstLast = {280.0,540.0,1080.0}); //en mm
   //find x-Projection 3 - hit Combo
   //2 Hit combination defines the value of the backward value at 0 ;
   //txPicked = (XT3 -XT1)/(ZT3-ZT1)
@@ -1766,9 +1766,11 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     debug()<<"Will Loop over Hits in first Zone"<<endmsg;
   }  
   auto HitF = m_hitManager->getIterator_Begin( firstZoneId);
+  auto HitF0 = HitF;
   auto fHitEnd = m_hitManager->getIterator_End( firstZoneId);
   PrHit* fHit ;
   for( ; HitF!= fHitEnd; ++HitF){
+//----------------------------------------------------For each hit in first x layer--------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
     fHit = &(*HitF);
     if( fHit->isUsed() && m_removeFlagged) continue;
@@ -1781,21 +1783,63 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     //For all cases except case = 0
     float maxXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  +tolHp;
     float minXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  -tolHp;;
+    
     if(maxXl < minXl){ //should never happen!
       std::swap( minXl, maxXl);
     }
     if(UNLIKELY(m_debug)) debug()<<"iCase "<<iCase<<"\t X last Min \t "<<minXl<<"\n\t\t\t Max X last \t "<<maxXl<<endmsg;
     if(UNLIKELY(m_debug)) debug()<<"Will Loop over Last Layer"<<endmsg;
+
+    /*
     //auto itL = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX());
     auto HitL = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
     //auto itLEnd = std::upper_bound( lHits.begin(), lHits.end(), maxXl, upperBoundX());
     auto itLEnd = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+    PrHit* lHit; */
+
+
+
+
+
+    //-----------------------------------------------WORK PLACE-------------------------------------------------------------
+   
+    if(fhit==&(*HitF0))
+      {
+    auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+    auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+      }
+      else
+	{
+	  float xProjeIn_current= xProjeInf + tx_inf*m_alphaCorrection[iCase];
+	  auto  Lbound += (xProjeIn_current - xProjeIn_prev);
+	  auto Ubound += (xProjeIn_current - xProjeIn_prev);
+	}
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //-----------------------------------------------WORK PLACE-------------------------------------------------------------
+
+
+
+
     PrHit* lHit;
     //loop trough hits in last layer
     //if(UNLIKELY(HitL == itLEnd)) continue;
-    for( ; HitL!=itLEnd; ++HitL){
+    for( ; Lbound!=Hbound; ++Lbound){
 
-      lHit = &(*HitL);
+      lHit = &(*Lbound);
       if(UNLIKELY(m_debug)){                                                                                                                                                                                                     
         debug()<<"Next Last layer hit"<<endmsg;
         //should never happen in principle 
@@ -2061,6 +2105,8 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
       }//end Loop xHist:xHitsLists
     }//end loop Last Zone given a firsZone selected
   }//end loop first zone
+//caching the previous projection
+    float xProjeInf_prev = xProjeInf + tx_inf*m_alphaCorrection[iCase];
 }
 
 
