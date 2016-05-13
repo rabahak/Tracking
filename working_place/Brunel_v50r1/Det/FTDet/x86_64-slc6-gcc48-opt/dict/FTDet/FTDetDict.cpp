@@ -38,7 +38,7 @@
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
-#include "/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/Det/FTDet/dict/FTDetDict.h"
+#include "/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/Det/FTDet/dict/FTDetDict.h"
 
 // Header files passed via #pragma extra_include
 
@@ -887,8 +887,8 @@ namespace {
     static const char* headers[] = {
 0    };
     static const char* includePaths[] = {
-"/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/Det/FTDet",
-"/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/include",
+"/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/Det/FTDet",
+"/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/InstallArea/x86_64-slc6-gcc48-opt/include",
 "/afs/cern.ch/lhcb/software/releases/BRUNEL/BRUNEL_v50r1/InstallArea/x86_64-slc6-gcc48-opt/include",
 "/afs/cern.ch/lhcb/software/releases/REC/REC_v19r2/InstallArea/x86_64-slc6-gcc48-opt/include",
 "/afs/cern.ch/lhcb/software/releases/LBCOM/LBCOM_v18r1/InstallArea/x86_64-slc6-gcc48-opt/include",
@@ -908,7 +908,7 @@ namespace {
 "/afs/cern.ch/sw/lcg/releases/LCGCMT/LCGCMT_84/LCG_Settings/../../../LCG_84/mysql/5.5.30/x86_64-slc6-gcc48-opt/include",
 "/afs/cern.ch/sw/lcg/releases/LCGCMT/LCGCMT_84/LCG_Platforms/src",
 "/afs/cern.ch/sw/lcg/releases/ROOT/6.06.02-6cc9c/x86_64-slc6-gcc48-opt/include",
-"/users/LHCb/abdulkhalek/cmtuser/Brunel_v50r1/Det/FTDet/cmt/",
+"/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/Det/FTDet/cmt/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

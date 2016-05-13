@@ -1,1 +1,0 @@
-PrFitPolinomial_cpp_dependencies =  ../src/PrFitPolinomial.cpp   ../src/PrFitPolinomial.h  $(bin)PrMCTools_deps/PrFitPolinomial_cpp.stamp

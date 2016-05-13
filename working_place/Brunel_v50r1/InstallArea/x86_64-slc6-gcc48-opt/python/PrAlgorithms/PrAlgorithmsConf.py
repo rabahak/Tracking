@@ -1,4 +1,4 @@
-#Wed May 11 14:30:56 2016"""Automatically generated. DO NOT EDIT please"""
+#Fri May 13 12:02:18 2016"""Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
 class PrDownstream( ConfigurableAlgorithm ) :

@@ -1,4 +1,4 @@
-#Wed May 11 14:30:36 2016"""Automatically generated. DO NOT EDIT please"""
+#Thu May 12 19:33:21 2016"""Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
 class DeFTTestAlg( ConfigurableAlgorithm ) :
