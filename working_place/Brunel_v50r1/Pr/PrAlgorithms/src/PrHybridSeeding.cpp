@@ -1665,9 +1665,11 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
   xHits.reserve(6);
   //-----------------------------------------------------Identifying layers [start]--------------------------------------------
   //just do the 1st one here //1st layer and last one
+  /*
   unsigned int firstZoneId = -1;
   unsigned int lastZoneId = -1;
-  if(0 == iCase){
+  
+if(0 == iCase){
     firstZoneId = s_T1X1 | part; // s_T1X1 = 0 and part = 0 or 1
     lastZoneId  = s_T3X2 | part;
   }else if ( 1 == iCase ){
@@ -1694,7 +1696,70 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
     if(xZoneId != firstZoneId && xZoneId != lastZoneId){
       xZones.push_back( m_zones[xZoneId] );
     }
-  }
+    }*/
+
+  // Just eliminating the loop and the check to identify xZones: because we already defined manually the first and last layer
+  unsigned int firstZoneId = -1;
+  unsigned int lastZoneId = -1;
+  PrHitZone* fZone;
+  PrHitZone* lZone; 
+
+  std::vector<PrHitZone*> xZones;
+  xZones.reserve(4);
+  if(0 == iCase){
+  firstZoneId =  s_T1X1 | part;
+  lastZoneId  =  s_T3X2 | part;
+
+  fZone = m_zones[firstZoneId]; 
+  lZone  = m_zones[lastZoneId];
+  xZones.push_back( m_zones[ s_T1X2 | part] );
+  xZones.push_back( m_zones[ s_T2X1 | part] );
+  xZones.push_back( m_zones[ s_T2X2 | part] );
+  xZones.push_back( m_zones[ s_T3X1 | part] );
+  }else if ( 1 == iCase ){
+    firstZoneId = s_T1X2 | part; // s_T1X2 = 6 and part = 0 or 1 , so s_T1X2 | part = 6 or 7 (that's why for consectuve layers : s_T1X1=s_T1U+2)
+    lastZoneId  = s_T3X1 | part;
+
+    fZone = m_zones[firstZoneId]; 
+    lZone  = m_zones[lastZoneId];
+    xZones.push_back( m_zones[ s_T1X1 | part] );
+    xZones.push_back( m_zones[ s_T2X1 | part] );
+    xZones.push_back( m_zones[ s_T2X2 | part] );
+    xZones.push_back( m_zones[ s_T3X2 | part] );
+  }else if ( 2 == iCase ){
+    firstZoneId = s_T1X1 | part;
+    lastZoneId  = s_T3X1 | part;
+
+    fZone = m_zones[firstZoneId]; 
+    lZone  = m_zones[lastZoneId];
+    xZones.push_back( m_zones[ s_T1X2 | part] );
+    xZones.push_back( m_zones[ s_T2X1 | part] );
+    xZones.push_back( m_zones[ s_T2X2 | part] );
+    xZones.push_back( m_zones[ s_T3X2 | part] );
+  }else if ( 3 == iCase ){
+    firstZoneId = s_T1X2 | part;
+    lastZoneId  = s_T3X2 | part;
+
+    fZone = m_zones[firstZoneId]; 
+    lZone  = m_zones[lastZoneId];
+    xZones.push_back( m_zones[ s_T1X1 | part] );
+    xZones.push_back( m_zones[ s_T2X1 | part] );
+    xZones.push_back( m_zones[ s_T2X2 | part] );
+    xZones.push_back( m_zones[ s_T3X1 | part] );
+ }
+if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
+
+  float zFirst     = fZone->z(0.); //First  Zone Z value
+  float zLast      = lZone->z(0.); //First  Zone Z value
+  float invDeltaZ = 1./(zLast-zFirst);     //Delta First-Last
+
+
+
+
+
+
+
+
   //-----------------------------------------------------Identifying layers [end]--------------------------------------------
   if(UNLIKELY(m_debug)){
     debug()<<"Hits in the InBetween Zones Loaded"<<endmsg;
