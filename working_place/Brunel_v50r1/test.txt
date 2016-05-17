@@ -1,0 +1,481 @@
+# setting LC_ALL to "C"
+# --> Including file '/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/upgrade-default.py'
+# <-- End of file '/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/upgrade-default.py'
+# applying configuration of Brunel
+# /***** User Brunel/Brunel **************************************************************************
+# |-DatasetName         = 'Brunel'
+# |-Histograms          = 'OfflineFull'
+# |-SkipEvents          = 0  (default: 0)
+# |-ProductionMode      = False
+# |-PackType            = 'TES'
+# |-NoWarnings          = False
+# |-WriteLumi           = False
+# |-DDDBtag             = ''
+# |-WithMC              = True  (default: False)
+# |-MainSequence        = ['ProcessPhase/Reco', 'ProcessPhase/Moni', 'ProcessPhase/MCLinks', 'ProcessPhase/Check']
+# |                     (default: None)
+# |-OutputType          = 'NONE'  (default: 'DST')
+# |-DigiType            = 'Default'
+# |-UseDBSnapshot       = False
+# |-PartitionName       = 'LHCb'
+# |-VetoHltErrorEvents  = False  (default: True)
+# |-MCCheckSequence     = ['Pat']  (default: None)
+# |-InputType           = 'DIGI'  (default: 'MDF')
+# |-OnlineMode          = False
+# |-WriteFSR            = True
+# |-SkipTracking        = False
+# |-DBSnapshotDirectory = '/group/online/hlt/conditions'
+# |-PrintFreq           = 1  (default: 1)
+# |-Detectors           = ['VP', 'UT', 'FT', 'Magnet']
+# |                     (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-EvtMax              = 10  (default: -1)
+# |-Simulation          = True  (default: False)
+# |-MergeGenFSR         = True
+# |-Context             = 'Offline'
+# |-RecoSequence        = ['Decoding', 'Tr']  (default: None)
+# |-CondDBtag           = ''
+# |-MCLinksSequence     = ['L0', 'Unpack', 'Tr', 'Calo']  (default: ['L0', 'Unpack', 'Tr', 'Calo'])
+# |-Hlt2FilterCode      = ''
+# |-Hlt1FilterCode      = ''
+# |-OutputLevel         = 3
+# |-InitSequence        = ['Brunel']  (default: None)
+# |-DataType            = 'Upgrade'  (default: '2015')
+# |-SplitRawEventInput  = None
+# |-SplitRawEventOutput = 4.1
+# |-RecL0Only           = False
+# |-RawBanksToKill      = None
+# |-SpecialData         = []  (default: [])
+# |-Monitors            = []  (default: [])
+# \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
+# /***** User RecSysConf/RecSysConf ******************************************************************
+# |-SkipTracking = False
+# |-DataType     = 'Upgrade'  (default: '')
+# |-OutputLevel  = 3
+# |-Histograms   = 'OfflineFull'
+# |-Detectors    = ['VP', 'UT', 'FT', 'Magnet']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
+# |-OutputType   = 'NONE'  (default: '')
+# |-Simulation   = True  (default: False)
+# |-Context      = 'Offline'
+# |-RecoSequence = ['Decoding', 'Tr']  (default: None)
+# |-SpecialData  = []  (default: [])
+# |-OnlineMode   = False
+# \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
+# /***** User TrackSys/TrackSys **********************************************************************
+# |-FilterBeforeFit          = True
+# |-GlobalCuts               = {}  (default: {})
+# |-ExpertTracking           = []  (default: [])
+# |-ExpertHistos             = False
+# |-TrackExtraInfoAlgorithms = []  (default: [])
+# |-DataType                 = 'Upgrade'  (default: '2011')
+# |-WithMC                   = True  (default: False)
+# |-TrackTypes               = ['Seeding']  (default: [])
+# |-OutputType               = ''
+# |-Simulation               = True  (default: False)
+# |-OldCloneKiller           = False
+# |-ForceNewSeq              = False
+# |-ExcludedLayers           = []  (default: [])
+# |-ForceOldSeq              = False
+# |-SpecialData              = []  (default: [])
+# |-TrackPatRecAlgorithms    = []  (default: [])
+# \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
+# /***** User RecMoniConf/RecMoniConf ****************************************************************
+# |-SkipTracking = False
+# |-DataType     = 'Upgrade'  (default: '')
+# |-Detectors    = ['VP', 'UT', 'FT', 'Magnet']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
+# |-Histograms   = 'OfflineFull'
+# |-OutputLevel  = 3
+# |-Simulation   = True  (default: False)
+# |-Context      = 'Offline'
+# |-MoniSequence = []  (default: None)
+# |-OnlineMode   = False
+# |-CheckEnabled = True  (default: False)
+# \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
+# WARNING: Run upgrade checkers.
+# No Writer defined for DIGI
+ApplicationMgr    SUCCESS 
+====================================================================================================================================
+                                                   Welcome to Brunel version v50r1
+                                          running on lhcb3.lal.in2p3.fr on Tue May 17 16:03:52 2016
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.T...   INFO This machine has a speed about   2.94 times the speed of a 2.8 GHz Xeon.
+TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
+TransportSvc         INFO Recovery of geometry errors is  ENABLED
+BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
+Init                 INFO Member list: GaudiSequencer/InitBrunelSeq, with context 'Offline'
+InitBrunelSeq        INFO Member list: RecInit/BrunelInit, EventCountHisto/BrunelEventCount, with context 'Offline'
+BrunelInit        SUCCESS ==================================================================
+BrunelInit        SUCCESS Requested to process 10 events
+BrunelInit        SUCCESS ==================================================================
+RootHistSvc          INFO Writing ROOT histograms to: Histos.root
+HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
+PhysicsSeq           INFO Member list: GaudiSequencer/CaloBanksHandler, GaudiSequencer/DecodeTriggerSeq, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, with context 'Offline'
+CaloBanksHandler     INFO Member list: GaudiSequencer/CaloDigits, with context 'Offline'
+CaloDigits           INFO Member list: , with context 'Offline'
+DecodeTriggerSeq     INFO Member list: HltDecReportsDecoder/Hlt1DecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder, GaudiSequencer/L0TriggerSeq, with context 'Offline'
+L0TriggerSeq         INFO Member list: L0DUFromRawAlg/L0DUFromRaw, with context 'Offline'
+ToolSvc.L0DUConfig   INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20160304"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB_Upgrade/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Using TAG "sim-20150716-vc-md100"
+ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {}
+ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
+ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK 
+ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
+Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoTrSeq, with context 'Offline'
+RecoDecodingSeq      INFO Member list: RawBankToSTClusterAlg/createUTClusters, RawBankToSTLiteClusterAlg/createUTLiteClusters, FTRawBankDecoder/createFTClusters, with context 'Offline'
+RecoTrSeq            INFO Member list: GaudiSequencer/TrSeedingSeq, with context 'Offline'
+TrSeedingSeq         INFO Member list: PrHybridSeeding, PrHybridSeeding, with context 'Offline'
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c1_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c2_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c3_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c4_onemap_down.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+DeFTDetector         INFO Current FT geometry version =   50
+PrHybridSeeding...   INFO This machine has a speed about   2.93 times the speed of a 2.8 GHz Xeon.
+PrHybridSeeding      INFO Will decode the FT clusters!
+PrHybridSeeding      INFO Will Flag the Hits
+PrHybridSeeding      INFO Will Not re-use Flagged
+PrHybridSeeding      INFO Standalone Seeding
+PrHybridSeeding      INFO Will Remove Clones
+PrHybridSeeding      INFO WIll Use the triangle Fix
+PrHybridSeeding      INFO ===================================================
+PrHybridSeeding      INFO ===============GLOBAL SETTINGS====================
+PrHybridSeeding      INFO  InputName                                       = 
+PrHybridSeeding      INFO  OutputName                                     = Rec/Track/Seed
+PrHybridSeeding      INFO  HitManagerName                                 = PrFTHitManager
+PrHybridSeeding      INFO  DecodeData                                     = 1
+PrHybridSeeding      INFO  XOnly                                          = 0
+PrHybridSeeding      INFO  MinXPlanes                                     = 4
+PrHybridSeeding      INFO  MaxNHits                                       = 12
+PrHybridSeeding      INFO  NCases                                         = 3
+PrHybridSeeding      INFO  TimingMeasurement                              = 1
+PrHybridSeeding      INFO  dRatiio                                        = -0.000262
+PrHybridSeeding      INFO  CConst BackProj                                = 2.458e+08
+PrHybridSeeding      INFO =================ADD UV Layer Settings============
+PrHybridSeeding      INFO doAsymmUV                                       = 1
+PrHybridSeeding      INFO Use Triangle Fix                                = 1
+PrHybridSeeding      INFO Use SecondOrder `Triangle Fixing                = 1
+PrHybridSeeding      INFO *******Fit Settings
+PrHybridSeeding      INFO ==================Clone Removal and Flag Hits Settings==========
+PrHybridSeeding      INFO Remove Clones after X searh       ?             = 1
+PrHybridSeeding      INFO Remove Clones after add stereo UV ?             = 1
+PrHybridSeeding      INFO Fraction of common hits to clone kill            = 0.7
+PrHybridSeeding      INFO Flag the hits                                   = 1
+PrHybridSeeding      INFO Remove All Flagged                              = 1
+PrHybridSeeding      INFO   Will Run N Cases = 3
+PrHybridSeeding      INFO  ============================ Find X Projection Settings =======================
+PrHybridSeeding      INFO  1 - First-Last Layer Settings  (2 Hit Combo)  
+PrHybridSeeding      INFO 	 Case 0   Rotation                  =120.64
+PrHybridSeeding      INFO 	 Case 0   Tolerance after Rotation  =280
+PrHybridSeeding      INFO 	 Case 1   Rotation                  =510.64
+PrHybridSeeding      INFO 	 Case 1   Tolerance after Rotation  =540
+PrHybridSeeding      INFO 	 Case 2   Rotation                  =730.64
+PrHybridSeeding      INFO 	 Case 2   Tolerance after Rotation  =1080
+PrHybridSeeding      INFO  2 - Add Hit in T2 - XLayers Stations  (3 Hit Combo) 
+PrHybridSeeding      INFO  Allow N Parabola Seed Hits = 8	 Case 0       x0Rotation = 0.002152
+PrHybridSeeding      INFO 	 Case 0    x0SlopeChange = 400    Tolerance at x0SlopeChange 0.75
+PrHybridSeeding      INFO 	 Case 0   x0SlopeChange2 = 2000    Tolerance at x0SlopeChange20.75
+PrHybridSeeding      INFO 	 Case 0             x0Max = 1500    Tolerance Up at x0Max4.5 Tolerance Down at x0Max 0.75
+PrHybridSeeding      INFO 	 Case 1       x0Rotation = 0.001534
+PrHybridSeeding      INFO 	 Case 1    x0SlopeChange = 500    Tolerance at x0SlopeChange 0.75
+PrHybridSeeding      INFO 	 Case 1   x0SlopeChange2 = 2000    Tolerance at x0SlopeChange20.75
+PrHybridSeeding      INFO 	 Case 1             x0Max = 4000    Tolerance Up at x0Max8 Tolerance Down at x0Max 2
+PrHybridSeeding      INFO 	 Case 2       x0Rotation = 0.001834
+PrHybridSeeding      INFO 	 Case 2    x0SlopeChange = 500    Tolerance at x0SlopeChange 0.75
+PrHybridSeeding      INFO 	 Case 2   x0SlopeChange2 = 2000    Tolerance at x0SlopeChange20.75
+PrHybridSeeding      INFO 	 Case 2             x0Max = 6000    Tolerance Up at x0Max14 Tolerance Down at x0Max 7
+PrHybridSeeding      INFO  3 - Add Hit in remaining Layers (4/5/6 Hit Combo) ---- 
+PrHybridSeeding      INFO 	 Case0    Tolerance = 1
+PrHybridSeeding      INFO 	 Case1    Tolerance = 1
+PrHybridSeeding      INFO 	 Case2    Tolerance = 1
+PrHybridSeeding      INFO  4 - Fit XZ Projection  
+PrHybridSeeding      INFO 	 minXPlanes 4	 dRatio -0.000262
+PrHybridSeeding      INFO 	 Case 0      MaxChi2Hit X Fit    = 5.5
+PrHybridSeeding      INFO 	 Case 0      MaxChi2Track X Fit  = 4
+PrHybridSeeding      INFO 	 Case 1      MaxChi2Hit X Fit    = 5.5
+PrHybridSeeding      INFO 	 Case 1      MaxChi2Track X Fit  = 5
+PrHybridSeeding      INFO 	 Case 2      MaxChi2Hit X Fit    = 5.5
+PrHybridSeeding      INFO 	 Case 2      MaxChi2Track X Fit  = 6
+PrHybridSeeding      INFO  Remove Clones X 1
+PrHybridSeeding      INFO  ========================= Add The UV part =================================== 
+PrHybridSeeding      INFO  1 - Hit Selection pre-Hough Clustering 
+PrHybridSeeding      INFO 	 Y Min                 -1
+PrHybridSeeding      INFO 	 Y Max                 2700
+PrHybridSeeding      INFO 	 UseTrFix              1
+PrHybridSeeding      INFO 	 Y Min TrFix           -2
+PrHybridSeeding      INFO 	 Y Max TrFix           30
+PrHybridSeeding      INFO 	 Asymmetric UV search  1
+PrHybridSeeding      INFO 	 RemoveHole            1
+PrHybridSeeding      INFO 	 TrFix 2nd Order       1
+PrHybridSeeding      INFO 
+PrHybridSeeding      INFO  2 - Hough Cluster in UV Layers (y/z) hits 
+PrHybridSeeding      INFO 	 Case 0 maxCoord-minCoord < 0.0017 + 0 * minCoord
+PrHybridSeeding      INFO 	 Case 1 maxCoord-minCoord < 0.0025 + 0.025 * minCoord
+PrHybridSeeding      INFO 	 Case 2 maxCoord-minCoord < 0.0035 + 0.035 * minCoord
+PrHybridSeeding      INFO 	 Case0max   Chi2DoFX + Chi2Line (<11) hit  5
+PrHybridSeeding      INFO 	 Case0max   Chi2DoFX + Chi2Line (>10) hit  30
+PrHybridSeeding      INFO 	 Case1max   Chi2DoFX + Chi2Line (<11) hit  6.5
+PrHybridSeeding      INFO 	 Case1max   Chi2DoFX + Chi2Line (>10) hit  50
+PrHybridSeeding      INFO 	 Case2max   Chi2DoFX + Chi2Line (<11) hit  7.5
+PrHybridSeeding      INFO 	 Case2max   Chi2DoFX + Chi2Line (>10) hit  80
+PrHybridSeeding      INFO  4 - Fit Full Track 
+PrHybridSeeding      INFO  Force track to have maxNHits ( if UseLineY, auto 12)  = 12
+PrHybridSeeding      INFO  Use dRatioCorrection with XY position 1
+PrHybridSeeding      INFO 	 	 Hits <11 
+PrHybridSeeding      INFO 	 Case0 maxY at 0 after Fit    50
+PrHybridSeeding      INFO 	 Case0 maxY at zRef after Fit 400
+PrHybridSeeding      INFO 	 Case0 MaxChi2Hit             2.5
+PrHybridSeeding      INFO 	 Case1 maxY at 0 after Fit    60
+PrHybridSeeding      INFO 	 Case1 maxY at zRef after Fit 550
+PrHybridSeeding      INFO 	 Case1 MaxChi2Hit             2.5
+PrHybridSeeding      INFO 	 Case2 maxY at 0 after Fit    70
+PrHybridSeeding      INFO 	 Case2 maxY at zRef after Fit 700
+PrHybridSeeding      INFO 	 Case2 MaxChi2Hit             2.5
+PrHybridSeeding      INFO 	 	 Hits >=11 
+PrHybridSeeding      INFO 	 Case0 MaxChi2Hit             5.5
+PrHybridSeeding      INFO 	 Case1 MaxChi2Hit             5.5
+PrHybridSeeding      INFO 	 Case2 MaxChi2Hit             5.5
+PrHybridSeeding      INFO  5 - FinalChi2DoF      
+PrHybridSeeding      INFO  ====================== Flag Hits ============================== 
+PrHybridSeeding      INFO 	 Case0 Size Flag12
+PrHybridSeeding      INFO 	 Case1 Size Flag11
+PrHybridSeeding      INFO 	 Case2 Size Flag10
+PrHybridSeeding      INFO  =====================  RECOVER TRACK ROUTINE =================== 
+PrHybridSeeding      INFO  WILL RECOVER TRACKS
+PrHybridSeeding      INFO  All hits found are marked as used, you will recover the x/z projection not promoted if
+PrHybridSeeding      INFO  NX = 6 : used  < 2
+PrHybridSeeding      INFO  NX = 5 : used  < 1
+PrHybridSeeding      INFO  NX = 4 : used  < 1
+PrHybridSeeding      INFO  Max Nb of clusters to process in stereo hit add                   : 3
+PrHybridSeeding      INFO  Min Nb of hits on recovered full track                            : 9
+PrHybridSeeding      INFO  Min Nb of UV hits to attach at x/z proj recovered with 6 hits     : 4
+PrHybridSeeding      INFO  Min Nb of UV hits to attach at x/z proj recovered with 5 hits     : 5
+PrHybridSeeding      INFO  Min Nb of UV hits to attach at x/z proj recovered with 4 hits     : 5
+PrHybridSeeding      INFO  Hough cluster spread in recovering routine                        : 0.01
+PrHybridSeeding      INFO  Max Y(0) of the track recovered                                   : 1800
+Moni                 INFO Member list: , with context 'Offline'
+MCLinks              INFO Member list: GaudiSequencer/MCLinksL0Seq, GaudiSequencer/MCLinksUnpackSeq, GaudiSequencer/MCLinksTrSeq, GaudiSequencer/MCLinksCaloSeq, with context 'Offline'
+MCLinksL0Seq         INFO Member list: , with context 'Offline'
+MCLinksUnpackSeq     INFO Member list: , with context 'Offline'
+MCLinksTrSeq         INFO Member list: PrLHCbID2MCParticle, PrTrackAssociator, PrChecker, with context 'Offline'
+PrTrackAssociator    INFO Processing all tracks containers in /Event/Rec/Track
+MCLinksCaloSeq       INFO Member list: CaloDigit2MCLinks2Table, CaloClusterMCTruth, CaloHypoMCTruth, with context 'Offline'
+Check                INFO Member list: GaudiSequencer/CheckPatSeq, with context 'Offline'
+CheckPatSeq          INFO Member list: , with context 'Offline'
+Output               INFO Member list: , with context 'Offline'
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='/exp/LHCb/abdulkhalek/InputFiles/4288_0_UFT5x_13104012_Noise_LightSharing_NewDeposit_RectangleSinglePowerAttMap_-Extended.digi' SVC='Gaudi::RootEvtSelector' OPT='READ'
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+BrunelInit           INFO Evt 1,  Run 1068,  Nr. in job = 1
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 2,  Run 1068,  Nr. in job = 2
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 3,  Run 1068,  Nr. in job = 3
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 4,  Run 1068,  Nr. in job = 4
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 5,  Run 1068,  Nr. in job = 5
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 6,  Run 1068,  Nr. in job = 6
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 7,  Run 1068,  Nr. in job = 7
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 8,  Run 1068,  Nr. in job = 8
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 9,  Run 1068,  Nr. in job = 9
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank
+BrunelInit           INFO Evt 10,  Run 1068,  Nr. in job = 10
+Hlt1DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+Hlt2DecReportsD...WARNING HltDecReportsDecoder::  Could not find HltDecReports raw bank. Returning empty HltDecReports.
+L0DUFromRaw       WARNING L0DUFromRawAlg:: The WARNING message is suppressed : 'Unable to decode L0DU rawBank'
+ApplicationMgr       INFO Application Manager Stopped successfully
+BrunelInit        SUCCESS ==================================================================
+BrunelInit        SUCCESS 10 events processed
+BrunelInit        SUCCESS ==================================================================
+BrunelEventCount     INFO 10 events processed
+BrunelEventCount  SUCCESS Booked 1 Histogram(s) : 1D=1 
+Hlt1DecReportsD...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+Hlt1DecReportsD...SUCCESS  #WARNINGS   = 10       Message = ' Could not find HltDecReports raw bank. Returning empty HltDecReports.'
+Hlt2DecReportsD...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+Hlt2DecReportsD...SUCCESS  #WARNINGS   = 10       Message = ' Could not find HltDecReports raw bank. Returning empty HltDecReports.'
+L0DUFromRaw       SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "L0DU RawBank Size (Bytes)"                     |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+L0DUFromRaw       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+L0DUFromRaw       SUCCESS  #WARNINGS   = 10       Message = 'Unable to decode L0DU rawBank'
+createUTClusters     INFO Successfully processed 100 %
+createUTClusters  SUCCESS Number of counters : 3
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# banks found"                                 |      1800 |       1800 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# valid banks"                                 |      1800 |       1800 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+createUTLiteClu...   INFO Successfully processed 100 %
+createUTLiteClu...SUCCESS Number of counters : 3
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# valid banks"                                 |      1800 |       1800 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# valid source ID"                             |      1800 |       1800 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+PrChecker.TTrack     INFO **** TTrack                            996 tracks including            74 ghosts [ 7.4 %], Event average   6.6 % ****
+PrChecker.TTrack     INFO                             hasT :     909 from     1448 [ 62.8 %]     43 clones [ 4.5 %], purity: 99.52 %, hitEff: 96.50 %
+PrChecker.TTrack     INFO                             long :     683 from      906 [ 75.4 %]     16 clones [ 2.3 %], purity: 99.58 %, hitEff: 97.02 %
+PrChecker.TTrack     INFO                        long>5GeV :     533 from      594 [ 89.7 %]      0 clones [ 0.0 %], purity: 99.54 %, hitEff: 97.60 %
+PrChecker.TTrack     INFO                       long_fromB :      53 from       59 [ 89.8 %]      0 clones [ 0.0 %], purity: 99.83 %, hitEff: 98.74 %
+PrChecker.TTrack     INFO                  long_fromB>5GeV :      49 from       52 [ 94.2 %]      0 clones [ 0.0 %], purity: 99.81 %, hitEff: 98.79 %
+PrChecker.TTrack     INFO                     UT+T_strange :      48 from       73 [ 65.8 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 97.14 %
+PrChecker.TTrack     INFO                UT+T_strange>5GeV :      26 from       28 [ 92.9 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 96.30 %
+PrChecker.TTrack     INFO              noVelo+UT+T_strange :      22 from       31 [ 71.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 96.70 %
+PrChecker.TTrack     INFO         noVelo+UT+T_strange>5GeV :       9 from       10 [ 90.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 93.78 %
+PrChecker.TTrack     INFO                     UT+T_SfromDB :       2 from        2 [100.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 95.83 %
+PrChecker.TTrack     INFO                UT+T_SfromDB>5GeV :       1 from        1 [100.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 91.67 %
+PrChecker.TTrack     INFO              noVelo+UT+T_SfromDB :       2 from        2 [100.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 95.83 %
+PrChecker.TTrack     INFO         noVelo+UT+T_SfromDB>5GeV :       1 from        1 [100.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 91.67 %
+PrChecker.TTrack     INFO 
+CaloDigit2MCLin...SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "#CD2MC links"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+CaloClusterMCTruthSUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "#CC2MC links"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+CaloHypoMCTruth   SUCCESS Number of counters : 4
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "No container Rec/Calo/Electrons"               |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "No container Rec/Calo/MergedPi0s"              |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "No container Rec/Calo/Photons"                 |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "No container Rec/Calo/SplitPhotons"            |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+EventLoopMgr         INFO Histograms converted successfully according to request.
+TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
+
+TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
+
+TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
+
+TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
+RootCnvSvc           INFO Disconnected data IO:DA32FC68-DC00-E611-9C74-02163E014F28 [/exp/LHCb/abdulkhalek/InputFiles/4288_0_UFT5x_13104012_Noise_LightSharing_NewDeposit_RectangleSinglePowerAttMap_-Extended.digi]
+ToolSvc              INFO Removing all tools created by ToolSvc
+PrChecker.PrChe...SUCCESS Booked 415 Histogram(s) : 1D=341 2D=74 
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO This machine has a speed about   2.93 times the speed of a 2.8 GHz Xeon.
+PrHybridSeeding...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO PrSeeding total               |    89.486 |    89.623 |   30.145     169.7    47.80 |      10 |     0.896 |
+PrHybridSeeding...   INFO   Time from Forward           |     0.799 |     0.848 |    0.637       1.3     0.19 |      10 |     0.008 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Up |     0.100 |     0.141 |    0.039       0.2     0.07 |      10 |     0.001 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Up    |     0.000 |     0.006 |    0.001       0.1     0.02 |      10 |     0.000 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Up |     0.000 |     0.007 |    0.002       0.1     0.02 |      10 |     0.000 |
+PrHybridSeeding...   INFO            Case 0 : Flag Up   |     0.000 |     0.005 |    0.001       0.1     0.02 |      10 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Up |     5.799 |     5.442 |    1.899       9.2     2.75 |      10 |     0.054 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Up    |     0.399 |     0.533 |    0.055       1.6     0.50 |      10 |     0.005 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Up |     4.599 |     4.724 |    0.789      10.6     3.64 |      10 |     0.047 |
+PrHybridSeeding...   INFO           Case 1 : Flag Up    |     0.100 |     0.039 |    0.016       0.1     0.03 |      10 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Up |     5.099 |     5.198 |    2.076       8.9     2.22 |      10 |     0.052 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Up    |     0.000 |     0.111 |    0.012       0.3     0.08 |      10 |     0.001 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Up |     1.799 |     1.712 |    0.235       3.3     1.13 |      10 |     0.017 |
+PrHybridSeeding...   INFO           Case 2 : Flag Up    |     0.000 |     0.000 |    0.000       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Dow|     2.499 |     2.366 |    1.082       4.8     1.31 |      10 |     0.024 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Down  |     0.000 |     0.103 |    0.020       0.3     0.09 |      10 |     0.001 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Dow|     1.299 |     1.257 |    0.344       2.9     0.85 |      10 |     0.013 |
+PrHybridSeeding...   INFO            Case 0 : Flag Down |     0.000 |     0.018 |    0.011       0.0     0.01 |      10 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Dow|     0.000 |     0.014 |    0.009       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Down  |     0.000 |     0.000 |    0.000       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Dow|     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO           Case 1 : Flag Down  |     0.000 |     0.008 |    0.005       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Dow|     0.000 |     0.009 |    0.006       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Down  |     0.000 |     0.000 |    0.000       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Dow|     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO           Case 2 : Flag Down  |     0.000 |     0.000 |    0.000       0.0     0.00 |      10 |     0.000 |
+PrHybridSeeding...   INFO   RemoveClones Up             |     0.200 |     0.058 |    0.016       0.2     0.04 |      10 |     0.001 |
+PrHybridSeeding...   INFO   RemoveClones Down           |     0.000 |     0.018 |    0.010       0.0     0.01 |      10 |     0.000 |
+PrHybridSeeding...   INFO   RecoverTrack                |     2.599 |     2.568 |    0.550       5.3     1.63 |      10 |     0.026 |
+PrHybridSeeding...   INFO   Convert Tracks Up           |     0.100 |     0.127 |    0.042       0.5     0.13 |      10 |     0.001 |
+PrHybridSeeding...   INFO   Convert Tracks Down         |     0.000 |     0.041 |    0.021       0.1     0.01 |      10 |     0.000 |
+PrHybridSeeding...   INFO Total findXProjections time   |  2034.790 | 146349375488.000 |   79.203 1463493853184.0 851530.94 |      10 | 1463493888.000 |
+PrHybridSeeding...   INFO OLD Total findXProjections tim|    42.393 |    42.522 |   14.789      86.8    24.09 |      10 |     0.425 |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.PrFTHit...   INFO Maximum number of hits 0
+BrunelInit.Brun...SUCCESS Booked 4 Histogram(s) : 1D=4 
+BrunelInit.Brun...SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Delta Memory/MB"                               |         9 |     19.896 |     2.2107 |     4.0286 |      0.0000 |      11.696 |
+ | "Total Memory/MB"                               |        10 |   9399.732 |     939.97 |     4.5481 |      928.29 |      948.19 |
+ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
+TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.T...   INFO This machine has a speed about   2.94 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
+TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.T...   INFO EVENT LOOP                    |   184.271 |   185.887 |   70.897     404.1   112.35 |      10 |     1.859 |
+TimingAuditor.T...   INFO  BrunelSequencer              |   183.672 |   185.121 |   70.318     403.4   112.13 |      10 |     1.851 |
+TimingAuditor.T...   INFO   Init                        |     0.400 |     0.348 |    0.175       1.7     0.49 |      10 |     0.003 |
+TimingAuditor.T...   INFO    InitBrunelSeq              |     0.400 |     0.346 |    0.172       1.7     0.49 |      10 |     0.003 |
+TimingAuditor.T...   INFO     BrunelInit                |     0.400 |     0.337 |    0.165       1.7     0.49 |      10 |     0.003 |
+TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO   PhysicsSeq                  |   183.272 |   184.766 |   70.119     403.2   111.85 |      10 |     1.848 |
+TimingAuditor.T...   INFO    CaloBanksHandler           |     0.000 |     0.003 |    0.003       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO     CaloDigits                |     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO    DecodeTriggerSeq           |     0.300 |     0.186 |    0.106       0.8     0.21 |      10 |     0.002 |
+TimingAuditor.T...   INFO     Hlt1DecReportsDecoder     |     0.100 |     0.047 |    0.029       0.2     0.05 |      10 |     0.000 |
+TimingAuditor.T...   INFO     Hlt2DecReportsDecoder     |     0.000 |     0.017 |    0.016       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO     L0TriggerSeq              |     0.100 |     0.115 |    0.055       0.6     0.17 |      10 |     0.001 |
+TimingAuditor.T...   INFO      L0DUFromRaw              |     0.100 |     0.111 |    0.053       0.6     0.17 |      10 |     0.001 |
+TimingAuditor.T...   INFO    Reco                       |    91.086 |    91.294 |   31.380     173.0    48.21 |      10 |     0.913 |
+TimingAuditor.T...   INFO     RecoDecodingSeq           |     1.599 |     1.652 |    1.223       3.2     0.58 |      10 |     0.017 |
+TimingAuditor.T...   INFO      createUTClusters         |     1.199 |     1.217 |    0.882       2.4     0.44 |      10 |     0.012 |
+TimingAuditor.T...   INFO      createUTLiteClusters     |     0.200 |     0.307 |    0.246       0.6     0.10 |      10 |     0.003 |
+TimingAuditor.T...   INFO      createFTClusters         |     0.200 |     0.118 |    0.086       0.2     0.04 |      10 |     0.001 |
+TimingAuditor.T...   INFO     RecoTrSeq                 |    89.486 |    89.638 |   30.153     169.8    47.80 |      10 |     0.896 |
+TimingAuditor.T...   INFO      TrSeedingSeq             |    89.486 |    89.635 |   30.151     169.8    47.80 |      10 |     0.896 |
+TimingAuditor.T...   INFO       PrHybridSeeding         |    89.486 |    89.628 |   30.148     169.7    47.80 |      10 |     0.896 |
+TimingAuditor.T...   INFO    Moni                       |     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO    MCLinks                    |    91.885 |    93.265 |   38.611     363.2   104.20 |      10 |     0.933 |
+TimingAuditor.T...   INFO     MCLinksL0Seq              |     0.000 |     0.001 |    0.000       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO     MCLinksUnpackSeq          |     0.099 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO     MCLinksTrSeq              |    91.686 |    93.057 |   38.498     363.1   104.12 |      10 |     0.931 |
+TimingAuditor.T...   INFO      PrLHCbID2MCParticle      |    69.589 |    71.188 |   23.098     344.3   102.36 |      10 |     0.712 |
+TimingAuditor.T...   INFO      PrTrackAssociator        |     0.699 |     0.464 |    0.217       0.9     0.20 |      10 |     0.005 |
+TimingAuditor.T...   INFO      PrChecker                |    21.396 |    21.390 |   13.800      40.8     7.62 |      10 |     0.214 |
+TimingAuditor.T...   INFO     MCLinksCaloSeq            |     0.100 |     0.198 |    0.105       0.9     0.23 |      10 |     0.002 |
+TimingAuditor.T...   INFO      CaloDigit2MCLinks2Table  |     0.000 |     0.066 |    0.025       0.4     0.10 |      10 |     0.001 |
+TimingAuditor.T...   INFO      CaloClusterMCTruth       |     0.000 |     0.054 |    0.022       0.3     0.09 |      10 |     0.001 |
+TimingAuditor.T...   INFO      CaloHypoMCTruth          |     0.000 |     0.070 |    0.053       0.2     0.04 |      10 |     0.001 |
+TimingAuditor.T...   INFO    Check                      |     0.000 |     0.003 |    0.003       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO     CheckPatSeq               |     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO   Output                      |     0.000 |     0.001 |    0.001       0.0     0.00 |      10 |     0.000 |
+TimingAuditor.T...   INFO *      UnpackMCParticles      |     5.099 |     5.272 |    4.022       8.8     1.44 |      10 |     0.053 |
+TimingAuditor.T...   INFO *      UnpackMCParticlesNextNe|     2.699 |     2.669 |    0.466       5.6     1.57 |      10 |     0.027 |
+TimingAuditor.T...   INFO *      UnpackMCParticlesPrevPr|    32.795 |    33.543 |    1.569     314.8    98.83 |      10 |     0.335 |
+TimingAuditor.T...   INFO *      UnpackMCParticlesPrev  |     2.799 |     2.742 |    1.394       5.3     1.45 |      10 |     0.027 |
+TimingAuditor.T...   INFO *      UnpackMCParticlesNext  |     3.099 |     3.135 |    0.514       6.2     1.67 |      10 |     0.031 |
+TimingAuditor.T...   INFO *      UnpackMCVertices       |     4.899 |     5.021 |    3.718       8.0     1.26 |      10 |     0.050 |
+TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 60/0/410(Alg/Node/Total).
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

@@ -126,7 +126,7 @@ protected:
    * @param part (if 1, y<0 ; if 0 , y>0)
    */
   void findXProjections( unsigned int part, unsigned int iCase);
-  
+  void findXProjections_OLD(unsigned int part, unsigned int ICase); //old method
   /** @brief Collect Hits in UV layers given the tolerances
    * @param xProje x-z plane track projection
    * @param uvZones UV Layers where to look the hits
@@ -411,6 +411,7 @@ private:
   ISequencerTimerTool* m_timerTool;
   //test _Rabah
   int m_timeXProjeTotal;
+  int m_timeXProjeTotal_OLD;
 
   int            m_timeTotal;
   int            m_timeFromForward;
