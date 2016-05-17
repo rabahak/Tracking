@@ -508,10 +508,10 @@ StatusCode PrHybridSeeding::execute() {
   //---------------------TEST: Measure of total time (xprojections)-----------------
   
   m_timerTool->start( m_timeXProjeTotal);
-  for( unsigned int part= 0; 2 > part; ++part ){
+  /*for( unsigned int part= 0; 2 > part; ++part ){
   for(unsigned int icase = 0; m_nCases > icase ; ++icase){
     findXProjections(part,icase);
-  }}
+  }}*/
   m_timerTool->stop( m_timeXProjeTotal);
 
 
@@ -1769,6 +1769,11 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
   auto HitF0 = HitF;
   auto fHitEnd = m_hitManager->getIterator_End( firstZoneId);
   PrHit* fHit ;
+
+  float xProj_previous=0; // just declaration
+  std::vector<PrHit>::iterator Lbound_prev; // declaration
+  std::vector<PrHit>::iterator Lbound;
+  std::vector<PrHit>::iterator Ubound;
   for( ; HitF!= fHitEnd; ++HitF){
 //----------------------------------------------------For each hit in first x layer--------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
@@ -1798,28 +1803,34 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     PrHit* lHit; */
 
 
+//-----------------------------------------------WORK PLACE-------------------------------------------------------------
+	//Tag: Rabah
+     if(HitF==HitF0)
+       {
+       Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+       Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+       
+       }
 
 
-
-    //-----------------------------------------------WORK PLACE-------------------------------------------------------------
-   
-    if(fhit==&(*HitF0))
-      {
-    auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
-    auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+     if(HitF!=HitF0)// to save time avoiding the method getIterator_lower/upperBound (we start from the previous lower bound which SHOULD be excluded (lower than) of the new tolerance window)
+       {
+	Ubound=Lbound_prev;
+	Lbound=Lbound_prev;
+	float xProj_current= xProjeInf + tx_inf*m_alphaCorrection[iCase];
+	maxXl+=xProj_current-xProj_previous; //Translation of the new tolerance window using the previous projection
+	minXl+=xProj_current-xProj_previous;
+	while((&(*Lbound))->x()<minXl)
+	  {Lbound++;}
+	Lbound--;
+	while((&(*Ubound))->x()<maxXl)
+	  {Ubound++;}
+	  Ubound--;
       }
-      else
-	{
-	  float xProjeIn_current= xProjeInf + tx_inf*m_alphaCorrection[iCase];
-	  auto  Lbound += (xProjeIn_current - xProjeIn_prev);
-	  auto Ubound += (xProjeIn_current - xProjeIn_prev);
-	}
-
-    
-
-
-
-
+	
+	
+     xProj_previous=xProjeInf + tx_inf*m_alphaCorrection[iCase]; //it's here because it's only needed in the previous else
+     Lbound_prev=Lbound; // because the Lbound is modified after this point (we need to save a replica)
 
 
 
@@ -1837,7 +1848,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     PrHit* lHit;
     //loop trough hits in last layer
     //if(UNLIKELY(HitL == itLEnd)) continue;
-    for( ; Lbound!=Hbound; ++Lbound){
+    for( ; Lbound!=Ubound; ++Lbound){
 
       lHit = &(*Lbound);
       if(UNLIKELY(m_debug)){                                                                                                                                                                                                     
@@ -2105,10 +2116,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
       }//end Loop xHist:xHitsLists
     }//end loop Last Zone given a firsZone selected
   }//end loop first zone
-//caching the previous projection
-    float xProjeInf_prev = xProjeInf + tx_inf*m_alphaCorrection[iCase];
 }
-
 
 
 
