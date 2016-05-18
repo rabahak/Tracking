@@ -1653,8 +1653,7 @@ void PrHybridSeeding::printHit( const PrHit& hit, std::string title){
 }
 
 void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
-  std::cout<<"findXProjections is CALLED !"<<std::endl;
-  std::cout<<" "<<std::endl;
+
   PrHits parabolaSeedHits; // List of hits in both x-layers in T2
   parabolaSeedHits.reserve(12);  
   std::vector<PrHits> xHitsLists; //vector of list of Hits
@@ -1773,6 +1772,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
   std::vector<PrHit>::iterator Ubound;
 
   std::vector<PrHit>::iterator itMBeg;
+  //  &(*itMBeg)=NULL;
   std::vector<PrHit>::iterator itMEnd;
   std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
 
@@ -1906,8 +1906,8 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
 	
 
 	
-        itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	itMEnd = m_hitManager->getIterator_End( xZone->number() );
+        //itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+	//itMEnd = m_hitManager->getIterator_End( xZone->number() );
 	
 	
 	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
@@ -1915,24 +1915,29 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
 		
 	//same as before
 	if(Lbound==Lbound_prev) // that means the first hit in the window of tollerance in  middle layer which is the lowest (Lbound)
-	  { std::cout<<"You're in IF"<<std::endl;
-	    //itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	    //itMEnd = m_hitManager->getIterator_End( xZone->number() );
+	  {
+	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
         }
     else
-      {std::cout<<"You're in ELSE"<<std::endl;
-/*
+      {
+	if(&(*itMBeg) != NULL){ //because there's a chance that for the lowest bound to be used ==> we don't pass by if to initiate itMBeg_prev
 	itMBeg=itMBeg_prev[m_zone_index];
 	while((&(*itMBeg))->x()<xMin)
 	  {itMBeg++;}
 	itMBeg--;
 	itMEnd=m_hitManager->getIterator_End( xZone->number());// since the tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm) it’s useless to do the upper bound call
-       */	} 
+       	}
+	else
+	  {itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
+	  }
+
+      }
     //if(xProj_current<=xProj_previous)
     //{if (m_debug) debug()<<"The iterator in first layer is not reading increasing values of X"<<endmsg;}	
-	//	itMBeg_prev[m_zone_index]=itMBeg; // m_zone_index = 0 or 1
+		itMBeg_prev[m_zone_index]=itMBeg; // m_zone_index = 0 or 1
 	 
-	std::cout<<"m_zone_index = "<<m_zone_index<<std::endl;
     m_zone_index++;
   
 
@@ -1955,8 +1960,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
       //&(*itMBeg)=NULL; //(not necessary maybe) but its because later on we have : xHitsLists.clear();
       m_zone_index=0;
 //-----------------------------------------------------------COLLECTING HITS IN MIDDLE LAYERS IS ENDED------------------------------------------------------------------
-      std::cout<<"END OF LOOP: -prime-"<<std::endl;
-      std::cout<<" "<<std::endl;
+     
       if(parabolaSeedHits.size()==0) continue; //go next last layer hit
       
       //if we don't fine any parabola Seed Hits in the middle 2 Layers then search for another XLast Hit
@@ -2162,10 +2166,6 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
           m_xCandidates[(int)part].push_back(temp_track); //The X Candidate is created
         }
       }//end Loop xHist:xHitsLists
-    }std::cout<<"END OF LOOP: -2-"<<std::endl;
-    std::cout<<" "<<std::endl;
-//end loop Last Zone given a firsZone selected
-  }std::cout<<"END OF LOOP: -1-"<<std::endl;
-  std::cout<<" "<<std::endl;
-//end loop first zone
+    }//end loop Last Zone given a firsZone selected
+  }//end loop first zone
 }
