@@ -89,7 +89,7 @@ GaudiAlgorithm(name,pSvcLocator),
   //Case2 : 1st = T1-1X Last = T3-1X
   //Hits in T3 are collected accrding to txInf = x1st/Z1st;
   declareProperty( "L0_AlphaCorr"     , m_alphaCorrection = {120.64,510.64,730.64});
-  declareProperty( "L0_tolHp"         , m_TolFirstLast = {280.0,540.0,1080.0}); //en mm
+  declareProperty( "L0_tolHp"         , m_TolFirstLast = {280.0,540.0,1080.0});
   //find x-Projection 3 - hit Combo
   //2 Hit combination defines the value of the backward value at 0 ;
   //txPicked = (XT3 -XT1)/(ZT3-ZT1)
@@ -269,10 +269,6 @@ StatusCode PrHybridSeeding::initialize() {
     m_timeConvert[0] = m_timerTool->addTimer("Convert Tracks Up");
     m_timeConvert[1] = m_timerTool->addTimer("Convert Tracks Down");
     m_timerTool->decreaseIndent();//0
-
-    //Test
-    m_timeXProjeTotal = m_timerTool->addTimer( "Total findXProjections time");
-    m_timeXProjeTotal_OLD=m_timerTool->addTimer("OLD Total findXProjections time");
   }
 
   if(UNLIKELY(m_printSettings)){
@@ -504,11 +500,6 @@ StatusCode PrHybridSeeding::execute() {
   //========================================================
   //------------------MAIN SEQUENCE IS HERE-----------------
   //========================================================
-
-
-
-  
-
   // ----- Loop through lower and upper half
   for( unsigned int part= 0; 2 > part; ++part ){
     //----- Loop For difference Cases
@@ -524,42 +515,18 @@ StatusCode PrHybridSeeding::execute() {
       }
       // Find The X Projection
       m_xCandidates[(int)part].clear(); //x candidates up cleaned every Case!
-
-
-      m_timerTool->start(  m_timeXProjeTotal);
       findXProjections(part,icase);
-      m_timerTool->start( m_timeXProjeTotal);
-
-
-
+      
       if(UNLIKELY(m_doTiming)){
         if( part ==0){
-          //timeStorage_xProj+=m_timerTool->stop( m_timeXProjeUp[icase]);
-	  m_timerTool->stop( m_timeXProjeUp[icase]);
+          m_timerTool->stop( m_timeXProjeUp[icase]);
           m_timerTool->start( m_timeCloneXUp[icase]);
-
-
-	  //TEST
-	  /*info()<<"Case: "<<icase<<" and part: "<<part<<" timeStorage_xProj= "<<timeStorage_xProj<<endmsg;
-	    info()<<"Case: "<<icase<<" and part: "<<part<<" m_timerTool->stop()= "<<m_timerTool->stop( m_timeXProjeUp[icase])<<endmsg;*/
-
-
         }else{
-          //timeStorage_xProj+=m_timerTool->stop( m_timeXProjeDo[icase]);
-	  m_timerTool->stop( m_timeXProjeDo[icase]);
+          m_timerTool->stop( m_timeXProjeDo[icase]);
           m_timerTool->start(m_timeCloneXDo[icase]);
-
-
-	  //TEST
-	  /*info()<<"Case: "<<icase<<" and part: "<<part<<" timeStorage_xProj= "<<timeStorage_xProj<<endmsg;
-	    info()<<"Case: "<<icase<<" and part: "<<part<<" m_timerTool->stop()= "<<m_timerTool->stop( m_timeXProjeDo[icase])<<endmsg;*/
-
-
         }
       }
-      //--------------------------------TOTAL TIME OF XPROJECTION----------------------------------
-      //timeStorage_xProj+=  m_timerTool->stop( m_timeXProjeUp[icase]) +  m_timerTool->stop( m_timeXProjeDo[icase]);
-      //--------------------------------TOTAL TIME OF XPROJECTION----------------------------------
+      
       if(m_removeClonesX) removeClonesX( part, icase, m_xOnly);
       if( UNLIKELY(m_doTiming)){
         
@@ -601,18 +568,6 @@ StatusCode PrHybridSeeding::execute() {
       }
     }
   }
-  //
-
-  /*
-if(UNLIKELY(m_doTiming)){
-  std::cout<<"The total duration of findXProjections is = "<<timeStorage_xProj<<std::endl;}
-  */
-
-
-
-
-
-
   for( unsigned int part = 0 ; part<2; part ++){ 
     if(UNLIKELY(m_doTiming)){
       m_timerTool->start( m_timeClone[(int)part]);
@@ -1653,7 +1608,6 @@ void PrHybridSeeding::printHit( const PrHit& hit, std::string title){
 }
 
 void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
-
   PrHits parabolaSeedHits; // List of hits in both x-layers in T2
   parabolaSeedHits.reserve(12);  
   std::vector<PrHits> xHitsLists; //vector of list of Hits
@@ -1662,11 +1616,9 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
   xHits.reserve(6);
   //-----------------------------------------------------Identifying layers [start]--------------------------------------------
   //just do the 1st one here //1st layer and last one
-  /*
-  unsigned int firstZoneId = -1;
+  /* unsigned int firstZoneId = -1;
   unsigned int lastZoneId = -1;
-  
-if(0 == iCase){
+  if(0 == iCase){
     firstZoneId = s_T1X1 | part; // s_T1X1 = 0 and part = 0 or 1
     lastZoneId  = s_T3X2 | part;
   }else if ( 1 == iCase ){
@@ -1695,7 +1647,6 @@ if(0 == iCase){
     }
     }*/
 
-  // Just eliminating the loop and the check to identify xZones: because we already defined manually the first and last layer
   unsigned int firstZoneId = -1;
   unsigned int lastZoneId = -1;
   PrHitZone* fZone;
@@ -1752,35 +1703,29 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
 
 
 
-
-
-
-
-
   //-----------------------------------------------------Identifying layers [end]--------------------------------------------
   if(UNLIKELY(m_debug)){
     debug()<<"Hits in the InBetween Zones Loaded"<<endmsg;
     debug()<<"Will Loop over Hits in first Zone"<<endmsg;
   }  
   auto HitF = m_hitManager->getIterator_Begin( firstZoneId);
-  auto HitF0 = HitF;
   auto fHitEnd = m_hitManager->getIterator_End( firstZoneId);
+  auto HitF0 = HitF;
+  //Test_Rabah
+  //  auto HitF_prev = m_hitManager->getIterator_Begin( firstZoneId);
   PrHit* fHit ;
 
   std::vector<PrHit>::iterator Lbound_prev;
   std::vector<PrHit>::iterator Lbound;
+  //if(&(*Lbound)==NULL) std::cout<<"&*Lbound is initialised as a NULL pointer !!!!!!!!!!!"<<std::endl;
   std::vector<PrHit>::iterator Ubound;
+  bool noHits_index=0;
 
-  std::vector<PrHit>::iterator itMBeg;
-  //  &(*itMBeg)=NULL;
-  std::vector<PrHit>::iterator itMEnd;
-  std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
 
   for( ; HitF!= fHitEnd; ++HitF){
-//----------------------------------------------------For each hit in first x layer--------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
     fHit = &(*HitF);
-    if( fHit->isUsed() && m_removeFlagged) continue;
+    if( fHit->isUsed() && m_removeFlagged) {continue;}
     ////define search window as a function of the x in the first layer
     //float tx_inf =  (*fHit).x()/zFirst;
     float tx_inf = fHit->x()/zFirst;
@@ -1790,70 +1735,61 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     //For all cases except case = 0
     float maxXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  +tolHp;
     float minXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  -tolHp;;
-    
     if(maxXl < minXl){ //should never happen!
       std::swap( minXl, maxXl);
     }
     if(UNLIKELY(m_debug)) debug()<<"iCase "<<iCase<<"\t X last Min \t "<<minXl<<"\n\t\t\t Max X last \t "<<maxXl<<endmsg;
     if(UNLIKELY(m_debug)) debug()<<"Will Loop over Last Layer"<<endmsg;
 
-
-
-    /*
-    //auto itL = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX());
-    auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
-    //auto itLEnd = std::upper_bound( lHits.begin(), lHits.end(), maxXl, upperBoundX());
-    auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
-    //PrHit* lHit; 
-    */
-
+    // auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+    // auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
 //-----------------------------------------------WORK PLACE-------------------------------------------------------------
+
+
 	//Tag: Rabah
     if(HitF==HitF0)
       {
 	Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
 	Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
-       
         }
-    else// to save time avoiding the method getIterator_lower/upperBound (we start from the previous lower bound which SHOULD be excluded (lower than) of the new tolerance window)
+    else
       {
-	Ubound=Lbound_prev;
 	Lbound=Lbound_prev;
-	while((&(*Lbound))->x()<minXl)
-	  {Lbound++;}
-	Lbound--;
-	while((&(*Ubound))->x()<maxXl)
-	  {Ubound++;}
-	  Ubound--;
-      }
-    //if( <=xProj_previous)
-    //{if (m_debug) debug()<<"The iterator in first layer is not reading increasing values of X"<<endmsg;}
+	for(;(*Lbound).x()<minXl;Lbound++)	//for(;(*Lbound).x()<minXl && (&(*Lbound))!=NULL;Lbound++)  
+	  {} // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
 	
-     //if((Lbound-1)!=m_hitManager->getIterator_Begin( lastZoneId))
+
+	Ubound=Lbound; // we start from the new Lbound set, to find Ubound
+	for(; (*Ubound).x()<maxXl;Ubound++) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
+	  {}
+
+	}
      Lbound_prev=Lbound; //needs to save it here  because the Lbound is modified after this point (we need to save a replica)
-     // the -1 is to take the hit below the Lbound, because Lbound is not necessarily excluded from the new tolerance window -> the one below surely is
-     // BUT !! since x is always increasing ==> Lbound previous SHOULD BE the Below or equal to the next Lbound
      
-
-     // else
-     // Lbound_prev=Lbound;
-
-
-
-
-
-
 
 
     //-----------------------------------------------WORK PLACE-------------------------------------------------------------
 
+    //---------------
+    /*  if(HitF!=HitF_prev)
+{
+  if((&(*HitF))->x()>(&(*HitF_prev))->x())
+    std::cout<<"The hits in first layer are sorted in x !"<<std::endl;
+  else
+    std::cout<<"The hits in first layer are NOT SORTED  !"<<std::endl;
+}
+
+HitF_prev = HitF;
+    */
 
 
+
+    //---------------
     PrHit* lHit;
     //loop trough hits in last layer
-    //if(UNLIKELY(HitL == itLEnd)) continue;
+    //if(UNLIKELY(Lbound == Ubound)) continue;
     for( ; Lbound!=Ubound; ++Lbound){
-//loop 2-----------------------------------------------FOR EACH HIT IN MIDDLE LAYER------------------------------------------------------------
+
       lHit = &(*Lbound);
       if(UNLIKELY(m_debug)){                                                                                                                                                                                                     
         debug()<<"Next Last layer hit"<<endmsg;
@@ -1863,7 +1799,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
           //break;
         }
       }
-      if(lHit->isUsed() && m_removeFlagged) continue;
+      if(lHit->isUsed() && m_removeFlagged){continue;}
       float tx_pickedcombination = (lHit->x()-fHit->x())*invDeltaZ;
       parabolaSeedHits.clear();
       float x0 = fHit->x()-tx_pickedcombination*zFirst;
@@ -1873,11 +1809,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
         debug() <<" x0 " << x0 << "CorrX0" << CorrX0 << "x0new" << x0new << "slope"<< m_x0Corr[iCase]<< endmsg;
         debug()<<"Will loop over Parabola Seed Hits: n Layers"<<m_zones.size()<<endmsg;
       }
-      int m_zone_index=0;
       for(PrHitZone* xZone : {m_zones[s_T2X1 | part], m_zones[s_T2X2 | part]}) {
-//loop 3-----------------------------------------------FOR EACH MIDDLE LAYER----------------------------------------
-
-
         float xProjected = x0 + xZone->z()*tx_pickedcombination;
         float xProjectedCorrected = xProjected+CorrX0;
         float xMax =0.;
@@ -1902,49 +1834,9 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
         if( xMax<xMin && m_debug) debug()<<"\t\t\t\t\t Wrong xMax/xMin"<<endmsg;
         if( m_debug) debug()<<"Lower bound the zones"<<endmsg;
         //auto itH = std::lower_bound(xZone->hits().begin(), xZone->hits().end(), xMin, lowerBoundX());
-
-	
-
-	
-        //itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	//itMEnd = m_hitManager->getIterator_End( xZone->number() );
-	
-	
-	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
-	//Tag: Rabah
-		
-	//same as before
-	if(Lbound==Lbound_prev) // that means the first hit in the window of tollerance in  middle layer which is the lowest (Lbound)
-	  {
-	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
-        }
-    else
-      {
-	if(&(*itMBeg) != NULL){ //because there's a chance that for the lowest bound to be used ==> we don't pass by if to initiate itMBeg_prev
-	itMBeg=itMBeg_prev[m_zone_index];
-	while((&(*itMBeg))->x()<xMin)
-	  {itMBeg++;}
-	itMBeg--;
-	itMEnd=m_hitManager->getIterator_End( xZone->number());// since the tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm) it’s useless to do the upper bound call
-       	}
-	else
-	  {itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
-	  }
-
-      }
-    //if(xProj_current<=xProj_previous)
-    //{if (m_debug) debug()<<"The iterator in first layer is not reading increasing values of X"<<endmsg;}	
-		itMBeg_prev[m_zone_index]=itMBeg; // m_zone_index = 0 or 1
-	 
-    m_zone_index++;
-  
-
-      	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
-        
-
-    if( itMBeg == itMEnd) continue;
+        auto itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+        auto itMEnd = m_hitManager->getIterator_End( xZone->number() );
+        if( itMBeg == itMEnd) continue;
         if(m_debug )debug()<<"Will Loop over xZones Hits"<<endmsg;
         //for(; xZone->hits().end() != itH; ++itH){
         for( ; itMBeg!= itMEnd; ++itMBeg){
@@ -1954,13 +1846,9 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
           if( (*itMBeg).isUsed() && m_removeFlagged) continue; //Not re use Hits in the middle
           if( m_debug) debug()<<"Filling Parabola Seed Hits"<<endmsg;
           parabolaSeedHits.push_back( &(*itMBeg) );
-	}//Look for another Hit in last layer
-       
-      }  //end loop to pick up Hits in the 2 inner Layers (was only)
-      //&(*itMBeg)=NULL; //(not necessary maybe) but its because later on we have : xHitsLists.clear();
-      m_zone_index=0;
-//-----------------------------------------------------------COLLECTING HITS IN MIDDLE LAYERS IS ENDED------------------------------------------------------------------
-     
+        }//Look for another Hit in last layer
+        //end loop to pick up Hits in the 2 inner Layers (was only)
+      }
       if(parabolaSeedHits.size()==0) continue; //go next last layer hit
       
       //if we don't fine any parabola Seed Hits in the middle 2 Layers then search for another XLast Hit
@@ -2169,3 +2057,8 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     }//end loop Last Zone given a firsZone selected
   }//end loop first zone
 }
+
+
+
+
+
