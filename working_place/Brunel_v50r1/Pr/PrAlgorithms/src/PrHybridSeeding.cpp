@@ -1717,9 +1717,13 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
 
   std::vector<PrHit>::iterator Lbound_prev;
   std::vector<PrHit>::iterator Lbound;
-  //if(&(*Lbound)==NULL) std::cout<<"&*Lbound is initialised as a NULL pointer !!!!!!!!!!!"<<std::endl;
   std::vector<PrHit>::iterator Ubound;
-  bool noHits_index=0;
+
+  
+  std::vector<PrHit>::iterator itMBeg;
+  std::vector<PrHit>::iterator itMEnd;
+  std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
+  
 
 
   for( ; HitF!= fHitEnd; ++HitF){
@@ -1788,7 +1792,7 @@ HitF_prev = HitF;
     PrHit* lHit;
     //loop trough hits in last layer
     //if(UNLIKELY(Lbound == Ubound)) continue;
-    for( ; Lbound!=Ubound; ++Lbound){
+    for( ; Lbound!=Ubound; ++Lbound){  //------------------------------------------------------FOR
 
       lHit = &(*Lbound);
       if(UNLIKELY(m_debug)){                                                                                                                                                                                                     
@@ -1809,7 +1813,11 @@ HitF_prev = HitF;
         debug() <<" x0 " << x0 << "CorrX0" << CorrX0 << "x0new" << x0new << "slope"<< m_x0Corr[iCase]<< endmsg;
         debug()<<"Will loop over Parabola Seed Hits: n Layers"<<m_zones.size()<<endmsg;
       }
-      for(PrHitZone* xZone : {m_zones[s_T2X1 | part], m_zones[s_T2X2 | part]}) {
+
+
+
+      int zone_index=0;
+      for(PrHitZone* xZone : {m_zones[s_T2X1 | part], m_zones[s_T2X2 | part]}) { //------------------------------------------------------FOR
         float xProjected = x0 + xZone->z()*tx_pickedcombination;
         float xProjectedCorrected = xProjected+CorrX0;
         float xMax =0.;
@@ -1836,19 +1844,61 @@ HitF_prev = HitF;
         //auto itH = std::lower_bound(xZone->hits().begin(), xZone->hits().end(), xMin, lowerBoundX());
         auto itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
         auto itMEnd = m_hitManager->getIterator_End( xZone->number() );
+
+	
+
+	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
+	//Tag: Rabah    same as before
+
+	//1st hit-1st layer && 1st hit-last layer
+	if(HitF==HitF0 && Lbound==Lbound_prev ) // only for the first 2-hit combination
+	  {
+	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
+        }
+    else
+      {//you should indicate on which layer you want itMBeg because it will not be defined when the condition HitF==HitF0 is not true
+	itMBeg=itMBeg_prev[zone_index];
+	//UNDER TESTING: 
+	if((&(*itMBeg))!=NULL){
+	for(;(*itMBeg).x()<xMin;itMBeg++)
+	  {}}
+	else
+	  {
+ itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+ std::cout<<"THE PROBLEM of SEGMENTATION IS IN HERE while accessing for(;(*itMBeg).x()<xMin;itMBeg++)"<<std::endl;
+	  }
+	//
+	itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
+      }
+    itMBeg_prev[zone_index]=itMBeg; // m_zone_index = 0 or 1
+
+    //CHECK:
+    /*  if((&(*itMBeg))==NULL || (&(*itMEnd))==NULL)
+      {
+	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
+	    std::cout<<"Here's the problem : Segmentation fault is cause by Null pointers"<<std::endl;
+      }
+    */
+
+    zone_index++;
+	
+       
         if( itMBeg == itMEnd) continue;
         if(m_debug )debug()<<"Will Loop over xZones Hits"<<endmsg;
-        //for(; xZone->hits().end() != itH; ++itH){
-        for( ; itMBeg!= itMEnd; ++itMBeg){
+        for( ; itMBeg!= itMEnd; ++itMBeg){   //--------------------------------------------------------------------FOR
           if( (*itMBeg).x() > xMax ) break;
-          //if( (*mHit).x() > xMax ) break;
-          // we can try to avoid this test
           if( (*itMBeg).isUsed() && m_removeFlagged) continue; //Not re use Hits in the middle
           if( m_debug) debug()<<"Filling Parabola Seed Hits"<<endmsg;
           parabolaSeedHits.push_back( &(*itMBeg) );
         }//Look for another Hit in last layer
-        //end loop to pick up Hits in the 2 inner Layers (was only)
-      }
+       
+      } //end loop to pick up Hits in the 2 inner Layers (was only)
+      zone_index=0;
+
+
+	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
       if(parabolaSeedHits.size()==0) continue; //go next last layer hit
       
       //if we don't fine any parabola Seed Hits in the middle 2 Layers then search for another XLast Hit
@@ -1930,8 +1980,8 @@ HitF_prev = HitF;
           }
           if(UNLIKELY(m_debug)) debug()<<"Get iterator lower bound "<<xMinAtZ<<endmsg;
           auto itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
-          //auto itH = std::lower_bound(xZone->hits().begin() ,xZone->hits().end(),xMinAtZ,lowerBoundX());
           auto itHEnd = m_hitManager->getIterator_End( xZone->number());
+ 
           PrHit* hit;
           //for (; xZone->hits().end() != itH; ++itH){
           if(itH == itHEnd) continue;
