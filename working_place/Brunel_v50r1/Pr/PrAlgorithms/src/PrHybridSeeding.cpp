@@ -1725,13 +1725,15 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
   std::vector<PrHit>::iterator itMEnd;
   std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
   bool first_hit_bool=1;
-  double x_old_prev=9999;
   double xMin_prev[2];
  
   //looping in remaining layers
   std::vector<PrHit>::iterator itH;
   std::vector<PrHit>::iterator itHEnd;
-  std::vector<PrHit>::iterator itH_prev;
+  std::vector<PrHit>::iterator itH_prev[8]; //for the 8 remaining layers
+  bool first_seed_bool=1;
+  //bool first_hit_bool2=1;
+  double xMinAtZ_prev[8];
 
   for( ; HitF!= fHitEnd; ++HitF){ //---------------------------------------------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
@@ -1862,6 +1864,7 @@ HitF_prev = HitF;
 	
 	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
 	//Tag: Rabah    same as before (Not quiet the same though)
+	//Verified: Effeciencies Are Conserved 
 	//1st hit-1st layer && 1st hit-last layer (for a given part)
 	if(first_hit_bool==true && Lbound==Lbound_prev ) // only for the first 2-hit combination
 	  {
@@ -1959,7 +1962,7 @@ HitF_prev = HitF;
       if( parabolaSeedHits.size()>m_maxParabolaSeedHits){
         maxParabolaSeedHits = parabolaSeedHits.size();
       }
-      for(unsigned int i = 0; i<maxParabolaSeedHits;++i){
+      for(unsigned int i = 0; i<maxParabolaSeedHits;++i){ //for a give hit in 1st layer, and a given hit in last layer
         float a = 0;
         float b = 0;
         float c = 0;
@@ -1997,9 +2000,12 @@ HitF_prev = HitF;
         //===================================================
         //Loop on all the xZones
         if(UNLIKELY(m_debug)) debug()<<"Loop on xZones   : size = "<<xZones.size()<<endmsg;
-        for(auto xZone :xZones){
+
+	zone_index=0;
+
+        for(auto xZone :xZones){ //look in zones except the 1st and last zones
           if (m_debug) debug()<<"Selecting ParSeedHits"<<endmsg;
-          if( (int)xZone->planeCode() == (int)parabolaSeedHits[i]->planeCode()) continue;
+          if( (int)xZone->planeCode() == (int)parabolaSeedHits[i]->planeCode()) continue; // look in zones except the middle zones (where parabolaseedhits)
           // float dz   = xZone->z() - m_geoTool->zReference();
           float dz = xZone->z() - m_zReference;
           float xAtZ= a * dz * dz * (1. + m_dRatio* dz) + b * dz + c; //with Cubic Correction
@@ -2014,37 +2020,47 @@ HitF_prev = HitF;
 
           //auto itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
           //auto itHEnd = m_hitManager->getIterator_End( xZone->number());
-	  /*
+	 
 	  //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
 	  //Tag: Rabah
 
-	  if(HitF==HitF0)
+	  if(Lbound==Lbound_prev && first_seed_bool ==1)
 	    {
-	      Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
-	      Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+	      itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
+	      itHEnd = m_hitManager->getIterator_End( xZone->number());
+	      if(zone_index==7)
+		first_seed_bool=false;
 	    }
 	  else
 	    {
-	      Lbound=Lbound_prev;
-	      while((*Lbound).x()<minXl)	//for(;(*Lbound).x()<minXl && (&(*Lbound))!=NULL;Lbound++)  
-		{
-		  if(Lbound==m_hitManager->getIterator_End( lastZoneId)) break;
-		  else Lbound++;
-		} // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
-	
+	      
+	    itH=itH_prev[zone_index];
 
-	      Ubound=Lbound; // we start from the new Lbound set, to find Ubound
-
-	      while((*Ubound).x()<maxXl) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
-		{
-		  if(Ubound==m_hitManager->getIterator_End( lastZoneId)) break;
-		  else Ubound++;
-
-		}
+	    if(xMinAtZ>xMinAtZ_prev[zone_index])
+	      {
+		while((*itH).x()<xMinAtZ) //because xMin is dependant on x0, (not constante as before in Lbound)
+		  {if(itH==m_hitManager->getIterator_End( xZone->number())) break;
+		    else itH++;}
+	      }
+	    else
+	      {
+		if(xMinAtZ!=xMinAtZ_prev[zone_index]) // excluded the case where the bound is not changed from previous
+		  {
+		    while((*itH).x()>xMinAtZ)
+		      {if(itH==m_hitManager->getIterator_Begin( xZone->number())) break;
+			else itH--;}
+		    itH++;
+		  
+		  }
+	      }
+	    itHEnd=m_hitManager->getIterator_End( xZone->number());
 	    }
-	  Lbound_prev=Lbound; //needs to save it here  because the Lbound is modified after this point (we need to save a replica)
+	itH_prev[zone_index]=itH; // m_zone_index = 0 or 1 for T2X1, and T2X2
+	xMinAtZ_prev[zone_index]=xMinAtZ;
+	zone_index++;
 
-	  */
+
+	  
 
 	  //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
           PrHit* hit;
@@ -2069,6 +2085,7 @@ HitF_prev = HitF;
             xHits.push_back( bestProj);
           }
         }//end loop xZones
+	zone_index=0;
         //in xHits are not present the first layer and last + parabola seed hits
         if(UNLIKELY(m_debug)){
           debug()<<"End Loop in between zones to pick up Projection of parabola"<<endmsg;
