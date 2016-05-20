@@ -1,0 +1,104 @@
+OLD:
+PrChecker.TTrack     INFO **** TTrack                            185 tracks including            19 ghosts [10.3 %], Event average  10.3 % ****
+PrChecker.TTrack     INFO                             hasT :     172 from      212 [ 81.1 %]     14 clones [ 7.5 %], purity: 99.64 %, hitEff: 97.15 %
+PrChecker.TTrack     INFO                             long :     119 from      129 [ 92.2 %]      5 clones [ 4.0 %], purity:100.00 %, hitEff: 97.83 %
+PrChecker.TTrack     INFO                        long>5GeV :      87 from       90 [ 96.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 98.96 %
+PrChecker.TTrack     INFO                       long_fromB :       4 from        5 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO                  long_fromB>5GeV :       4 from        5 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO                     UT+T_strange :      16 from       18 [ 88.9 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 97.44 %
+PrChecker.TTrack     INFO                UT+T_strange>5GeV :       6 from        7 [ 85.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO              noVelo+UT+T_strange :       8 from       10 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 96.96 %
+PrChecker.TTrack     INFO         noVelo+UT+T_strange>5GeV :       2 from        3 [ 66.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+
+NEW:
+PrChecker.TTrack     INFO **** TTrack                            185 tracks including            19 ghosts [10.3 %], Event average  10.3 % ****
+PrChecker.TTrack     INFO                             hasT :     172 from      212 [ 81.1 %]     14 clones [ 7.5 %], purity: 99.64 %, hitEff: 97.15 %
+PrChecker.TTrack     INFO                             long :     119 from      129 [ 92.2 %]      5 clones [ 4.0 %], purity:100.00 %, hitEff: 97.83 %
+PrChecker.TTrack     INFO                        long>5GeV :      87 from       90 [ 96.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 98.96 %
+PrChecker.TTrack     INFO                       long_fromB :       4 from        5 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO                  long_fromB>5GeV :       4 from        5 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO                     UT+T_strange :      16 from       18 [ 88.9 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 97.44 %
+PrChecker.TTrack     INFO                UT+T_strange>5GeV :       6 from        7 [ 85.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+PrChecker.TTrack     INFO              noVelo+UT+T_strange :       8 from       10 [ 80.0 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff: 96.96 %
+PrChecker.TTrack     INFO         noVelo+UT+T_strange>5GeV :       2 from        3 [ 66.7 %]      0 clones [ 0.0 %], purity:100.00 %, hitEff:100.00 %
+
+
+
+
+
+
+OLD:
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO This machine has a speed about   2.99 times the speed of a 2.8 GHz Xeon.
+PrHybridSeeding...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO PrSeeding total               |    69.990 |    70.227 |   70.227      70.2     0.00 |       1 |     0.070 |
+PrHybridSeeding...   INFO   Time from Forward           |     1.000 |     1.310 |    1.310       1.3     0.00 |       1 |     0.001 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Up |     4.999 |     4.571 |    4.571       4.6     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Up    |     0.000 |     0.325 |    0.325       0.3     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Up |     3.000 |     2.947 |    2.947       2.9     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO            Case 0 : Flag Up   |     0.000 |     0.103 |    0.103       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Up |     3.999 |     4.133 |    4.133       4.1     0.00 |       1 |     0.004 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Up    |     1.000 |     0.214 |    0.214       0.2     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Up |     2.000 |     2.453 |    2.453       2.5     0.00 |       1 |     0.002 |
+PrHybridSeeding...   INFO           Case 1 : Flag Up    |     0.000 |     0.046 |    0.046       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Up |     6.999 |     6.521 |    6.521       6.5     0.00 |       1 |     0.007 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Up    |     0.000 |     0.138 |    0.138       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Up |     2.000 |     2.230 |    2.230       2.2     0.00 |       1 |     0.002 |
+PrHybridSeeding...   INFO           Case 2 : Flag Up    |     0.000 |     0.000 |    0.000       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Dow|     4.999 |     4.682 |    4.682       4.7     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Down  |     0.000 |     0.307 |    0.307       0.3     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Dow|     2.999 |     2.737 |    2.737       2.7     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO            Case 0 : Flag Down |     0.000 |     0.029 |    0.029       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Dow|     5.999 |     5.846 |    5.846       5.8     0.00 |       1 |     0.006 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Down  |     0.000 |     0.404 |    0.404       0.4     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Dow|     4.000 |     4.532 |    4.532       4.5     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO           Case 1 : Flag Down  |     0.000 |     0.055 |    0.055       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Dow|    10.998 |    11.541 |   11.541      11.5     0.00 |       1 |     0.012 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Down  |     1.000 |     0.548 |    0.548       0.5     0.00 |       1 |     0.001 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Dow|     4.999 |     5.348 |    5.348       5.3     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO           Case 2 : Flag Down  |     0.000 |     0.001 |    0.001       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RemoveClones Up             |     0.000 |     0.139 |    0.139       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RemoveClones Down           |     0.000 |     0.094 |    0.094       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RecoverTrack                |     8.999 |     8.490 |    8.490       8.5     0.00 |       1 |     0.008 |
+PrHybridSeeding...   INFO   Convert Tracks Up           |     0.000 |     0.392 |    0.392       0.4     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   Convert Tracks Down         |     0.000 |     0.087 |    0.087       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+
+NEW:
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO This machine has a speed about   3.02 times the speed of a 2.8 GHz Xeon.
+PrHybridSeeding...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------
+PrHybridSeeding...   INFO PrSeeding total               |    64.990 |    64.893 |   64.893      64.9     0.00 |       1 |     0.065 |
+PrHybridSeeding...   INFO   Time from Forward           |     1.000 |     1.362 |    1.362       1.4     0.00 |       1 |     0.001 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Up |     3.999 |     3.891 |    3.891       3.9     0.00 |       1 |     0.004 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Up    |     1.000 |     0.381 |    0.381       0.4     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Up |     2.999 |     3.039 |    3.039       3.0     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO            Case 0 : Flag Up   |     0.000 |     0.124 |    0.124       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Up |     3.000 |     3.366 |    3.366       3.4     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Up    |     0.000 |     0.159 |    0.159       0.2     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Up |     2.999 |     2.540 |    2.540       2.5     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO           Case 1 : Flag Up    |     0.000 |     0.064 |    0.064       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Up |     5.000 |     5.556 |    5.556       5.6     0.00 |       1 |     0.006 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Up    |     1.000 |     0.153 |    0.153       0.2     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Up |     1.999 |     2.242 |    2.242       2.2     0.00 |       1 |     0.002 |
+PrHybridSeeding...   INFO           Case 2 : Flag Up    |     0.000 |     0.000 |    0.000       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 0 : X Projections Dow|     4.000 |     3.792 |    3.792       3.8     0.00 |       1 |     0.004 |
+PrHybridSeeding...   INFO       Case 0 : Clones X Down  |     0.000 |     0.313 |    0.313       0.3     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 0 : AddStereo Dow|     2.999 |     2.850 |    2.850       2.8     0.00 |       1 |     0.003 |
+PrHybridSeeding...   INFO            Case 0 : Flag Down |     0.000 |     0.028 |    0.028       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 1 : X Projections Dow|     4.999 |     4.809 |    4.809       4.8     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO       Case 1 : Clones X Down  |     0.000 |     0.397 |    0.397       0.4     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO         Case 1 : AddStereo Dow|     5.000 |     4.689 |    4.689       4.7     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO           Case 1 : Flag Down  |     0.000 |     0.055 |    0.055       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO     Case 2 : X Projections Dow|     9.998 |     9.772 |    9.772       9.8     0.00 |       1 |     0.010 |
+PrHybridSeeding...   INFO       Case 2 : Clones X Down  |     0.000 |     0.518 |    0.518       0.5     0.00 |       1 |     0.001 |
+PrHybridSeeding...   INFO         Case 2 : AddStereo Dow|     4.999 |     5.401 |    5.401       5.4     0.00 |       1 |     0.005 |
+PrHybridSeeding...   INFO           Case 2 : Flag Down  |     0.000 |     0.000 |    0.000       0.0     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RemoveClones Up             |     1.000 |     0.152 |    0.152       0.2     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RemoveClones Down           |     0.000 |     0.107 |    0.107       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   RecoverTrack                |     7.999 |     8.557 |    8.557       8.6     0.00 |       1 |     0.009 |
+PrHybridSeeding...   INFO   Convert Tracks Up           |     1.000 |     0.424 |    0.424       0.4     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO   Convert Tracks Down         |     0.000 |     0.130 |    0.130       0.1     0.00 |       1 |     0.000 |
+PrHybridSeeding...   INFO --------------------------------------------------------------------------------------------------

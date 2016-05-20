@@ -1715,16 +1715,23 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
   //  auto HitF_prev = m_hitManager->getIterator_Begin( firstZoneId);
   PrHit* fHit ;
 
-  std::vector<PrHit>::iterator Lbound_prev;
+  //looping in last layer
   std::vector<PrHit>::iterator Lbound;
   std::vector<PrHit>::iterator Ubound;
-
+  std::vector<PrHit>::iterator Lbound_prev;
   
+  //looping in middle layers
   std::vector<PrHit>::iterator itMBeg;
   std::vector<PrHit>::iterator itMEnd;
   std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
   bool first_hit_bool=1;
   double x_old_prev=9999;
+  double xMin_prev[2];
+ 
+  //looping in remaining layers
+  std::vector<PrHit>::iterator itH;
+  std::vector<PrHit>::iterator itHEnd;
+  std::vector<PrHit>::iterator itH_prev;
 
   for( ; HitF!= fHitEnd; ++HitF){ //---------------------------------------------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
@@ -1848,13 +1855,13 @@ HitF_prev = HitF;
         if( xMax<xMin && m_debug) debug()<<"\t\t\t\t\t Wrong xMax/xMin"<<endmsg;
         if( m_debug) debug()<<"Lower bound the zones"<<endmsg;
 
-        auto itMBeg_old = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-        auto itMEnd_old = m_hitManager->getIterator_End( xZone->number() );
+        //auto itMBeg_old = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+        //auto itMEnd_old = m_hitManager->getIterator_End( xZone->number() );
 
 	
 	
 	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
-	//Tag: Rabah    same as before
+	//Tag: Rabah    same as before (Not quiet the same though)
 	//1st hit-1st layer && 1st hit-last layer (for a given part)
 	if(first_hit_bool==true && Lbound==Lbound_prev ) // only for the first 2-hit combination
 	  {
@@ -1862,24 +1869,39 @@ HitF_prev = HitF;
 	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
 	    if(zone_index==1)
 	      first_hit_bool=false;
-        }
+	  }
 	else
 	  {
 	    itMBeg=itMBeg_prev[zone_index];
-	    while((*itMBeg).x()<xMin)
-	      {if(itMBeg==m_hitManager->getIterator_End( xZone->number())) break;
-		else itMBeg++;}
 
-	    itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
+	    if(xMin>xMin_prev[zone_index])
+	      {
+		while((*itMBeg).x()<xMin) //because xMin is dependant on x0, (not constante as before in Lbound)
+		  {if(itMBeg==m_hitManager->getIterator_End( xZone->number())) break;
+		    else itMBeg++;}
+	      }
+	    else
+	      {
+		if(xMin!=xMin_prev[zone_index]) // excluded the case where the bound is not changed from previous
+		  {
+		    while((*itMBeg).x()>xMin)
+		      {if(itMBeg==m_hitManager->getIterator_Begin( xZone->number())) break;
+			else itMBeg--;}
+		    itMBeg++;
+		  
+		  }
+	      }
+	      
+		itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
 	      
 
 	  }
 	itMBeg_prev[zone_index]=itMBeg; // m_zone_index = 0 or 1 for T2X1, and T2X2
+	xMin_prev[zone_index]=xMin;
 
-
-
+	/*
 	//TEST ZONE [start]
-
+	if(zone_index==0){ //one of the layer is enough to compare
 	std::cout<<"MIDDLE "<<zone_index+1<<std::endl;
 	std::cout<<"You are in part:"<<part<<" and case:"<<iCase<<std::endl;
 	std::cout<<"*itMBeg_old.x() = "<<(*itMBeg_old).x()<<std::endl;
@@ -1888,9 +1910,9 @@ HitF_prev = HitF;
 	  if((*itMBeg_old).x()<x_old_prev)
 	    std::cout<<"VIA OLD METHOD: itMBeg is not always ascending"<<std::endl;
 	x_old_prev=(*itMBeg_old).x();
-	if(zone_index==1)
-	std::cout<<" "<<std::endl;
 
+	std::cout<<" "<<std::endl;}
+	*/
 	//TEST ZONE [end]
 
 	zone_index++;
@@ -1989,9 +2011,42 @@ HitF_prev = HitF;
             if (m_debug) debug()<<"Bad Settings!!!!!!"<<endmsg;
           }
           if(UNLIKELY(m_debug)) debug()<<"Get iterator lower bound "<<xMinAtZ<<endmsg;
-          auto itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
-          auto itHEnd = m_hitManager->getIterator_End( xZone->number());
- 
+
+          //auto itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
+          //auto itHEnd = m_hitManager->getIterator_End( xZone->number());
+	  /*
+	  //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
+	  //Tag: Rabah
+
+	  if(HitF==HitF0)
+	    {
+	      Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+	      Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+	    }
+	  else
+	    {
+	      Lbound=Lbound_prev;
+	      while((*Lbound).x()<minXl)	//for(;(*Lbound).x()<minXl && (&(*Lbound))!=NULL;Lbound++)  
+		{
+		  if(Lbound==m_hitManager->getIterator_End( lastZoneId)) break;
+		  else Lbound++;
+		} // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
+	
+
+	      Ubound=Lbound; // we start from the new Lbound set, to find Ubound
+
+	      while((*Ubound).x()<maxXl) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
+		{
+		  if(Ubound==m_hitManager->getIterator_End( lastZoneId)) break;
+		  else Ubound++;
+
+		}
+	    }
+	  Lbound_prev=Lbound; //needs to save it here  because the Lbound is modified after this point (we need to save a replica)
+
+	  */
+
+	  //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
           PrHit* hit;
           //for (; xZone->hits().end() != itH; ++itH){
           if(itH == itHEnd) continue;
