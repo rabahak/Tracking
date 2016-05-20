@@ -1723,10 +1723,10 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
   std::vector<PrHit>::iterator itMBeg;
   std::vector<PrHit>::iterator itMEnd;
   std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
-  
+  bool first_hit_bool=1;
+  double x_old_prev=9999;
 
-
-  for( ; HitF!= fHitEnd; ++HitF){
+  for( ; HitF!= fHitEnd; ++HitF){ //---------------------------------------------------------------------------------
     if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
     fHit = &(*HitF);
     if( fHit->isUsed() && m_removeFlagged) {continue;}
@@ -1748,8 +1748,7 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     // auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
     // auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
 //-----------------------------------------------WORK PLACE-------------------------------------------------------------
-
-
+//Efficiencies are CONSERVED via this method relatively to the old one
 	//Tag: Rabah
     if(HitF==HitF0)
       {
@@ -1759,15 +1758,22 @@ if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
     else
       {
 	Lbound=Lbound_prev;
-	for(;(*Lbound).x()<minXl;Lbound++)	//for(;(*Lbound).x()<minXl && (&(*Lbound))!=NULL;Lbound++)  
-	  {} // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
+	while((*Lbound).x()<minXl)	//for(;(*Lbound).x()<minXl && (&(*Lbound))!=NULL;Lbound++)  
+      {
+	if(Lbound==m_hitManager->getIterator_End( lastZoneId)) break;
+	else Lbound++;
+      } // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
 	
 
 	Ubound=Lbound; // we start from the new Lbound set, to find Ubound
-	for(; (*Ubound).x()<maxXl;Ubound++) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
-	  {}
 
-	}
+	while((*Ubound).x()<maxXl) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
+	  {
+	    if(Ubound==m_hitManager->getIterator_End( lastZoneId)) break;
+	    else Ubound++;
+
+	       }
+      }
      Lbound_prev=Lbound; //needs to save it here  because the Lbound is modified after this point (we need to save a replica)
      
 
@@ -1841,50 +1847,54 @@ HitF_prev = HitF;
         if(xMin > xMax) always()<<"Error xMin xMax"<<endmsg;
         if( xMax<xMin && m_debug) debug()<<"\t\t\t\t\t Wrong xMax/xMin"<<endmsg;
         if( m_debug) debug()<<"Lower bound the zones"<<endmsg;
-        //auto itH = std::lower_bound(xZone->hits().begin(), xZone->hits().end(), xMin, lowerBoundX());
-        auto itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-        auto itMEnd = m_hitManager->getIterator_End( xZone->number() );
+
+        auto itMBeg_old = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+        auto itMEnd_old = m_hitManager->getIterator_End( xZone->number() );
 
 	
-
+	
 	//-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
 	//Tag: Rabah    same as before
-
-	//1st hit-1st layer && 1st hit-last layer
-	if(HitF==HitF0 && Lbound==Lbound_prev ) // only for the first 2-hit combination
+	//1st hit-1st layer && 1st hit-last layer (for a given part)
+	if(first_hit_bool==true && Lbound==Lbound_prev ) // only for the first 2-hit combination
 	  {
 	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
 	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
+	    if(zone_index==1)
+	      first_hit_bool=false;
         }
-    else
-      {//you should indicate on which layer you want itMBeg because it will not be defined when the condition HitF==HitF0 is not true
-	itMBeg=itMBeg_prev[zone_index];
-	//UNDER TESTING: 
-	if((&(*itMBeg))!=NULL){
-	for(;(*itMBeg).x()<xMin;itMBeg++)
-	  {}}
 	else
 	  {
- itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
- std::cout<<"THE PROBLEM of SEGMENTATION IS IN HERE while accessing for(;(*itMBeg).x()<xMin;itMBeg++)"<<std::endl;
+	    itMBeg=itMBeg_prev[zone_index];
+	    while((*itMBeg).x()<xMin)
+	      {if(itMBeg==m_hitManager->getIterator_End( xZone->number())) break;
+		else itMBeg++;}
+
+	    itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
+	      
+
 	  }
-	//
-	itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
-      }
-    itMBeg_prev[zone_index]=itMBeg; // m_zone_index = 0 or 1
+	itMBeg_prev[zone_index]=itMBeg; // m_zone_index = 0 or 1 for T2X1, and T2X2
 
-    //CHECK:
-    /*  if((&(*itMBeg))==NULL || (&(*itMEnd))==NULL)
-      {
-	    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
-	    itMEnd = m_hitManager->getIterator_End( xZone->number() );
-	    std::cout<<"Here's the problem : Segmentation fault is cause by Null pointers"<<std::endl;
-      }
-    */
 
-    zone_index++;
-	
-       
+
+	//TEST ZONE [start]
+
+	std::cout<<"MIDDLE "<<zone_index+1<<std::endl;
+	std::cout<<"You are in part:"<<part<<" and case:"<<iCase<<std::endl;
+	std::cout<<"*itMBeg_old.x() = "<<(*itMBeg_old).x()<<std::endl;
+	std::cout<<"*itMBeg.x() = "<<(*itMBeg).x()<<std::endl;
+	if(x_old_prev != 9999)
+	  if((*itMBeg_old).x()<x_old_prev)
+	    std::cout<<"VIA OLD METHOD: itMBeg is not always ascending"<<std::endl;
+	x_old_prev=(*itMBeg_old).x();
+	if(zone_index==1)
+	std::cout<<" "<<std::endl;
+
+	//TEST ZONE [end]
+
+	zone_index++;
+
         if( itMBeg == itMEnd) continue;
         if(m_debug )debug()<<"Will Loop over xZones Hits"<<endmsg;
         for( ; itMBeg!= itMEnd; ++itMBeg){   //--------------------------------------------------------------------FOR
