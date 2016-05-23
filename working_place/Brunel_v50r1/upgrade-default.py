@@ -3,7 +3,7 @@ from Gaudi.Configuration import *
 from Configurables import Brunel
 from Gaudi.Configuration import *
 
-##########################
+###########################
 name = "Ciao"
  
 Brunel().EvtMax      = 10  #Number of events to run -1 to run on all
