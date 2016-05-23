@@ -35,7 +35,7 @@ from Configurables import TrackSys
 #TrackSys().TrackTypes= ["Velo","Upstream","Forward","Seeding","Match","Downstream"] #Run ALL algorithms ( Downstream tracking depending on configuration needs the Forward and Matching (not sure about upstream ?)
 
 #TrackSys().TrackTypes= ["Velo","Upstream","Forward","Seeding","Match"] #Run ALL algorithms excluding the Downstream
-TrackSys().TrackTypes = ["Seeding"]#,"Downstream"] #Run Only Seeding and Downstream ( needs to set Seeding.DecodeData = True) 
+TrackSys().TrackTypes = ["Velo","Forward","Seeding"]#,"Downstream"] #Run Only Seeding and Downstream ( needs to set Seeding.DecodeData = True) 
 Brunel().RecoSequence = ["Decoding","Tr" ]  #Allow to decode and run tracking
 
 #disable trigger
@@ -78,12 +78,12 @@ IOHelper('ROOT').inputFiles([
 ###################### Custom Reconstruction sequence
 
 def setMCTruth() :
-    from Configurables import PrLHCbID2MCParticle, PrTrackAssociator
+    from Configurables import PrLHCbID2MCParticle, PrTrackAssociator, VPClusterLinker
     GaudiSequencer("RecoTrSeq").Members = []
     GaudiSequencer("CheckPatSeq").Members = []
     GaudiSequencer("MCLinksUnpackSeq").Members = [ ]
     GaudiSequencer("MCLinksTrSeq").Members = []
-    GaudiSequencer("MCLinksTrSeq").Members = ["PrLHCbID2MCParticle","PrTrackAssociator"]
+    GaudiSequencer("MCLinksTrSeq").Members = ["VPClusterLinker","PrLHCbID2MCParticle","PrTrackAssociator"]
     #setting the Checking sequence                                                                                                                                                                       
     from Configurables import PrChecker
     #PrChecker configuration ( Pr/PrMCTools/PrChecker.cpp ) (it produces the efficiencies and the plots (Eta25Cut : performance only for tracks in 2<eta<5, by default it also excludes electrons from pe\rformance numbers                                                                                                                                                                                    
@@ -98,7 +98,8 @@ def setupSeeding() :
     #PrHybridSeeding("PrHybridSeeding").InputName = "Rec/Track/Forward" #Seeding From Forward                                                                                                        
     PrHybridSeeding("PrHybridSeeding",
                     InputName = "",
-                    DecodeData = True, #Set to True if you don't want to run Forward in the sequence                                                                               
+                    DecodeData = False, #Set to True if you don't want to run Forward in the sequence                                                                              
+                    OutputLevel =3,
                     Recover = True,
                     TimingMeasurement = True,
                     PrintSettings = True) #produce some clones ( higher +2% ghost rate )                                                                                                 
