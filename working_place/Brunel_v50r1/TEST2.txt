@@ -1,0 +1,198 @@
+# setting LC_ALL to "C"
+# --> Including file '/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/upgrade-default2.py'
+# <-- End of file '/users/LHCb/abdulkhalek/working_place/Brunel_v50r1/upgrade-default2.py'
+# applying configuration of Brunel
+# /***** User Brunel/Brunel **************************************************************************
+# |-DatasetName         = 'Brunel'
+# |-Histograms          = 'OfflineFull'
+# |-SkipEvents          = 0  (default: 0)
+# |-ProductionMode      = False
+# |-PackType            = 'TES'
+# |-NoWarnings          = False
+# |-WriteLumi           = False
+# |-DDDBtag             = ''
+# |-WithMC              = True  (default: False)
+# |-MainSequence        = ['ProcessPhase/Reco', 'ProcessPhase/Moni', 'ProcessPhase/MCLinks', 'ProcessPhase/Check']
+# |                     (default: None)
+# |-OutputType          = 'NONE'  (default: 'DST')
+# |-DigiType            = 'Default'
+# |-UseDBSnapshot       = False
+# |-PartitionName       = 'LHCb'
+# |-VetoHltErrorEvents  = False  (default: True)
+# |-MCCheckSequence     = ['Pat']  (default: None)
+# |-InputType           = 'DIGI'  (default: 'MDF')
+# |-OnlineMode          = False
+# |-WriteFSR            = True
+# |-SkipTracking        = False
+# |-DBSnapshotDirectory = '/group/online/hlt/conditions'
+# |-PrintFreq           = 1  (default: 1)
+# |-Detectors           = ['VP', 'FT', 'Magnet']
+# |                     (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-EvtMax              = 10  (default: -1)
+# |-Simulation          = True  (default: False)
+# |-MergeGenFSR         = True
+# |-Context             = 'Offline'
+# |-RecoSequence        = ['Decoding', 'Tr']  (default: None)
+# |-CondDBtag           = ''
+# |-MCLinksSequence     = ['L0', 'Unpack', 'Tr', 'Calo']  (default: ['L0', 'Unpack', 'Tr', 'Calo'])
+# |-Hlt2FilterCode      = ''
+# |-Hlt1FilterCode      = ''
+# |-OutputLevel         = 3
+# |-InitSequence        = ['Brunel']  (default: None)
+# |-DataType            = 'Upgrade'  (default: '2015')
+# |-SplitRawEventInput  = None
+# |-SplitRawEventOutput = 4.1
+# |-RecL0Only           = False
+# |-RawBanksToKill      = None
+# |-SpecialData         = []  (default: [])
+# |-Monitors            = []  (default: [])
+# \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
+# /***** User RecSysConf/RecSysConf ******************************************************************
+# |-SkipTracking = False
+# |-DataType     = 'Upgrade'  (default: '')
+# |-OutputLevel  = 3
+# |-Histograms   = 'OfflineFull'
+# |-Detectors    = ['VP', 'FT', 'Magnet']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
+# |-OutputType   = 'NONE'  (default: '')
+# |-Simulation   = True  (default: False)
+# |-Context      = 'Offline'
+# |-RecoSequence = ['Decoding', 'Tr']  (default: None)
+# |-SpecialData  = []  (default: [])
+# |-OnlineMode   = False
+# \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
+# /***** User TrackSys/TrackSys **********************************************************************
+# |-FilterBeforeFit          = True
+# |-GlobalCuts               = {}  (default: {})
+# |-ExpertTracking           = []  (default: [])
+# |-ExpertHistos             = False
+# |-TrackExtraInfoAlgorithms = []  (default: [])
+# |-DataType                 = 'Upgrade'  (default: '2011')
+# |-WithMC                   = True  (default: False)
+# |-TrackTypes               = ['Velo', 'Forward', 'Seeding']  (default: [])
+# |-OutputType               = ''
+# |-Simulation               = True  (default: False)
+# |-OldCloneKiller           = False
+# |-ForceNewSeq              = False
+# |-ExcludedLayers           = []  (default: [])
+# |-ForceOldSeq              = False
+# |-SpecialData              = []  (default: [])
+# |-TrackPatRecAlgorithms    = []  (default: [])
+# \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
+# /***** User RecMoniConf/RecMoniConf ****************************************************************
+# |-SkipTracking = False
+# |-DataType     = 'Upgrade'  (default: '')
+# |-Detectors    = ['VP', 'FT', 'Magnet']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
+# |-Histograms   = 'OfflineFull'
+# |-OutputLevel  = 3
+# |-Simulation   = True  (default: False)
+# |-Context      = 'Offline'
+# |-MoniSequence = []  (default: None)
+# |-OnlineMode   = False
+# |-CheckEnabled = True  (default: False)
+# \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
+# WARNING: Run upgrade checkers.
+# No Writer defined for DIGI
+ApplicationMgr    SUCCESS 
+====================================================================================================================================
+                                                   Welcome to Brunel version v50r1
+                                          running on lhcb3.lal.in2p3.fr on Tue May 24 10:50:06 2016
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.T...   INFO This machine has a speed about   3.06 times the speed of a 2.8 GHz Xeon.
+TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
+TransportSvc         INFO Recovery of geometry errors is  ENABLED
+BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
+Init                 INFO Member list: GaudiSequencer/InitBrunelSeq, with context 'Offline'
+InitBrunelSeq        INFO Member list: RecInit/BrunelInit, EventCountHisto/BrunelEventCount, with context 'Offline'
+BrunelInit        SUCCESS ==================================================================
+BrunelInit        SUCCESS Requested to process 10 events
+BrunelInit        SUCCESS ==================================================================
+RootHistSvc          INFO Writing ROOT histograms to: Histos.root
+HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
+PhysicsSeq           INFO Member list: GaudiSequencer/CaloBanksHandler, GaudiSequencer/DecodeTriggerSeq, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, with context 'Offline'
+CaloBanksHandler     INFO Member list: GaudiSequencer/CaloDigits, with context 'Offline'
+CaloDigits           INFO Member list: , with context 'Offline'
+DecodeTriggerSeq     INFO Member list: HltDecReportsDecoder/Hlt1DecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder, GaudiSequencer/L0TriggerSeq, with context 'Offline'
+L0TriggerSeq         INFO Member list: L0DUFromRawAlg/L0DUFromRaw, with context 'Offline'
+ToolSvc.L0DUConfig   INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20160304"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB_Upgrade/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Using TAG "sim-20150716-vc-md100"
+ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {}
+ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
+ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK 
+ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
+Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoTrSeq, with context 'Offline'
+RecoDecodingSeq      INFO Member list: FTRawBankDecoder/createFTClusters, with context 'Offline'
+RecoTrSeq            INFO Member list: GaudiSequencer/TrVeloSeq, GaudiSequencer/TrForwardSeq, GaudiSequencer/TrSeedingSeq, with context 'Offline'
+TrVeloSeq            INFO Member list: PrPixelTracking, PrPixelStoreClusters, with context 'Offline'
+DeVP                 INFO There are 208 sensors (left: 104, right: 104)
+TrForwardSeq         INFO Member list: PrForwardTracking, with context 'Offline'
+DeFTDetector         INFO Current FT geometry version =   50
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c1_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c2_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c3_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/c4_onemap_down.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+ToolSvc             ERROR Cannot create tool PrAddUTHitsTool (No factory found)
+PrForwardTracki...  FATAL PrForwardTool:: Exception throw: tool():: Could not retrieve Tool 'PrAddUTHitsTool' StatusCode=FAILURE
+PrForwardTracki...  FATAL  Exception with tag= is caught
+PrForwardTracki...  ERROR 	PrForwardTracking.PrForwardTool:: tool():: Could not retrieve Tool 'PrAddUTHitsTool'	 StatusCode=FAILURE
+ToolSvc             ERROR Error initializing tool 'PrForwardTracking.PrForwardTool'
+PrForwardTracking   FATAL PrForwardTracking:: Exception throw: tool():: Could not retrieve Tool 'PrForwardTool' StatusCode=FAILURE
+PrForwardTracking   FATAL  Exception with tag= is caught 
+PrForwardTracking   ERROR 	PrForwardTracking:: tool():: Could not retrieve Tool 'PrForwardTool'	 StatusCode=FAILURE
+ChronoStatSvc        INFO  Number of skipped events for MemStat-1
+TrForwardSeq        ERROR GaudiSequencer:: Can not initialize PrForwardTracking StatusCode=FAILURE
+RecoTrSeq           ERROR GaudiSequencer:: Can not initialize TrForwardSeq StatusCode=FAILURE
+Reco                ERROR ProcessPhase:: Can not initialize RecoTrSeq StatusCode=FAILURE
+PhysicsSeq          ERROR GaudiSequencer:: Can not initialize Reco StatusCode=FAILURE
+BrunelSequencer     ERROR GaudiSequencer:: Can not initialize PhysicsSeq StatusCode=FAILURE
+EventLoopMgr        ERROR Unable to initialize Algorithm: BrunelSequencer
+ServiceManager      ERROR Unable to initialize Service: EventLoopMgr
+ApplicationMgr       INFO Application Manager Terminated successfully
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'EvtCounter/ToolSvc.EvtCounter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0CondDBProvider/ToolSvc.L0CondDBProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0DUConfigProvider/ToolSvc.L0DUConfig.Template' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0DUEmulatorTool/ToolSvc.L0DUEmulatorTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0DUFromRawTool/L0DUFromRaw.L0DUFromRawTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0DUMultiConfigProvider/ToolSvc.L0DUConfig' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'L0ProcessorDataDecoder/ToolSvc.L0DUEmulatorTool.L0ProcessorDataDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MemoryTool/BrunelInit.BrunelMemory' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ODINDecodeTool/ToolSvc.L0DUEmulatorTool.OdinDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ODINDecodeTool/ToolSvc.OdinTimeDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OdinTimeDecoder/ToolSvc.L0DUEmulatorTool.OdinDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OdinTimeDecoder/ToolSvc.OdinTimeDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PrFTHitManager/ToolSvc.PrFTHitManager' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PrForwardTool/PrForwardTracking.PrForwardTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PrGeometryTool/ToolSvc.PrGeometryTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PrPixelHitManager/ToolSvc.PrPixelHitManager' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'EvtCounter/ToolSvc.EvtCounter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0CondDBProvider/ToolSvc.L0CondDBProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0DUConfigProvider/ToolSvc.L0DUConfig.Template' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0DUEmulatorTool/ToolSvc.L0DUEmulatorTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0DUFromRawTool/L0DUFromRaw.L0DUFromRawTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0DUMultiConfigProvider/ToolSvc.L0DUConfig' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'L0ProcessorDataDecoder/ToolSvc.L0DUEmulatorTool.L0ProcessorDataDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MemoryTool/BrunelInit.BrunelMemory' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ODINDecodeTool/ToolSvc.L0DUEmulatorTool.OdinDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ODINDecodeTool/ToolSvc.OdinTimeDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OdinTimeDecoder/ToolSvc.L0DUEmulatorTool.OdinDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OdinTimeDecoder/ToolSvc.OdinTimeDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PrFTHitManager/ToolSvc.PrFTHitManager' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PrGeometryTool/ToolSvc.PrGeometryTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PrPixelHitManager/ToolSvc.PrPixelHitManager' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
