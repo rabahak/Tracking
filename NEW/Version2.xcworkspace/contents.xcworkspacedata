@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:boundsManager.cpp">
+   </FileRef>
+   <FileRef
+      location = "group:scratch.cpp">
+   </FileRef>
+   <FileRef
+      location = "group:boundsManager.hpp">
+   </FileRef>
+   <FileRef
+      location = "group:findx.cpp">
+   </FileRef>
+</Workspace>
