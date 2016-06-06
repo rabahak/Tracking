@@ -5,10 +5,19 @@
       location = "group:boundsManager.cpp">
    </FileRef>
    <FileRef
-      location = "group:scratch.cpp">
+      location = "group:boundsManager.hpp">
    </FileRef>
    <FileRef
-      location = "group:boundsManager.hpp">
+      location = "group:PrHybridSeeding.cpp">
+   </FileRef>
+   <FileRef
+      location = "group:tolerancesConstantes.h">
+   </FileRef>
+   <FileRef
+      location = "group:HitManager.h">
+   </FileRef>
+   <FileRef
+      location = "group:scratch.cpp">
    </FileRef>
    <FileRef
       location = "group:findx.cpp">

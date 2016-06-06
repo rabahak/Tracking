@@ -9,8 +9,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
     //just do the 1st one here //1st layer and last one
     unsigned int firstZoneId = -1;
     unsigned int lastZoneId = -1;
-    std::vector<PrHitZone*> zones;
-    zones.reserve(6);
+    std::array<PrHitZone*,6> zones;
     
     if(0 == iCase){
         firstZoneId = s_T1X1 | part;
@@ -26,14 +25,17 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
         lastZoneId  = s_T3X2 | part;
     }
     if(UNLIKELY(m_debug)){ debug()<<"\t Loading Case Hit in first and last Zone"<<endmsg;}
-    zones.pushback(m_zones[firstZoneId]);
-    zones.pushback(m_zones[lastZoneId]);
+    zones[0]=m_zones[firstZoneId];
+    zones[1]=m_zones[lastZoneId];
     if(UNLIKELY(m_debug)){ debug()<<"Hits in last and first Zone Loaded"<<endmsg;}
-    
-    for(unsigned int xZoneId : {s_T1X1, s_T1X2, s_T2X1, s_T2X2, s_T3X1, s_T3X2}){
+    zones[2]=m_zones[s_T2X1|part];
+    zones[3]=m_zones[s_T2X2|part];
+    int i=4;
+    for(unsigned int xZoneId : {s_T1X1, s_T1X2, s_T3X1, s_T3X2}){
         xZoneId |= part;
         if(xZoneId != firstZoneId && xZoneId != lastZoneId){
-            zones.push_back( m_zones[xZoneId] );
+            zones[i]=m_zones[xZoneId];
+            i++;
         }
     }
         if(UNLIKELY(m_debug)){
