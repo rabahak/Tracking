@@ -1743,7 +1743,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
     }
     
     //===FIRST LAYER LOOP===
-    for(; Bounds[0].first != Last[0]; Bounds[0].first++) //for a hit in first layer
+    for(; Bounds[0].first != Bounds[0].second; Bounds[0].first++) //for a hit in first layer
     {
         float xproj=computeX(0,0,Bounds[0].first->x(),zones[0]->z(), zones[1]->z()+m_alphaCorrection[iCase]);
         float maxL = xproj + m_TolFirstLast[iCase];
@@ -1760,7 +1760,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
             continue;
 	
         //===SECOND LAYER LOOP===
-        for(; Bounds[1].first != Last[1]; Bounds[1].first++) //for a hit in last layer
+        for(; Bounds[1].first != Bounds[1].second; Bounds[1].first++) //for a hit in last layer
         {        //                  1 refers to a dynamic bound (hit) here (in its corresponding loop)
             
             //one can also exclude for i=1 from the loop, since xproj is known in last layer : its the Bounds[1].first->x() itself ! (save one call of computeX)
