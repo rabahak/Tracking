@@ -1,0 +1,76 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		65FD54FE1D10645A00FB775A /* PrHybridSeeding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrHybridSeeding.h; sourceTree = "<group>"; };
+		65FD55001D1064F300FB775A /* PrHybridSeeding.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PrHybridSeeding.cpp; sourceTree = "<group>"; };
+		65FD55011D10653500FB775A /* PrHitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrHitManager.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		65FD54F61D10641300FB775A = {
+			isa = PBXGroup;
+			children = (
+				65FD55001D1064F300FB775A /* PrHybridSeeding.cpp */,
+				65FD55011D10653500FB775A /* PrHitManager.h */,
+				65FD54FE1D10645A00FB775A /* PrHybridSeeding.h */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		65FD54F71D10641300FB775A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+			};
+			buildConfigurationList = 65FD54FA1D10641300FB775A /* Build configuration list for PBXProject "V1_updated0" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 65FD54F61D10641300FB775A;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		65FD54FB1D10641300FB775A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		65FD54FC1D10641300FB775A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		65FD54FA1D10641300FB775A /* Build configuration list for PBXProject "V1_updated0" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65FD54FB1D10641300FB775A /* Debug */,
+				65FD54FC1D10641300FB775A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 65FD54F71D10641300FB775A /* Project object */;
+}
