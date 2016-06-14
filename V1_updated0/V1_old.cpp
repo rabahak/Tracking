@@ -15,13 +15,6 @@
 #include "Event/FTCluster.h"
 #include "Event/FTLiteCluster.h"
 
-//New
-/*
- #include "PrKernel/PrHitManager.h"
- #include "boundsManager.h"
- #include <utility>
- */
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : PrHybridSeeding
 //
@@ -42,9 +35,12 @@ m_hitManager(nullptr)
 ,m_debugTool(nullptr)
 ,m_zones(24)
 ,m_timerTool(nullptr){
+    //----- Newer Faster stereo method ( on by Default ), faster than normal one but need some retuning of the line Chi2 and tolerances
+    // declareProperty("useCoordCut",m_useCoordCut={false,false,false} );
+    // declareProperty("maxCoord", m_maxCoord = {0.17,0.25, 0.38 } );
     
     //====================================================== Final Track State parameters ================================================
-    declareProperty("log_bounds",m_log = true);
+    
     declareProperty("ZOutputs", m_zOutputs ={StateParameters::ZBegT , StateParameters::ZMidT, StateParameters::ZEndT});
     declareProperty( "StateErrorX2",    m_stateErrorX2    =   4. );
     declareProperty( "StateErrorY2",    m_stateErrorY2    = 400. );
@@ -69,7 +65,6 @@ m_hitManager(nullptr)
     //============================================= Global parameters ===========================================================
     declareProperty( "OutputName"         ,     m_outputName=LHCb::TrackLocation::Seed);
     declareProperty( "HitManagerName"     ,     m_hitManagerName= "PrFTHitManager");
-    
     declareProperty( "XOnly"              ,     m_xOnly= false);
     declareProperty( "MinXPlanes"         ,     m_minXPlanes= 4);         //XZ projection finding ( start with 6->5->4 ( outlier removal). 4 hits on track are killed by default at the first fit
     //as well as the outlier removed form 5->4.
@@ -137,7 +132,6 @@ m_hitManager(nullptr)
     declareProperty( "ToleranceX0Down"    , m_tolX0Oppsig = {0.75,0.75,0.75});
     //find x-Projection Remaining layers & fitting
     // Tolerance for remaining layers ( after the 3 hit combination ) in mm
-    declareProperty( "tolsearch", m_tolSearch = 20. );
     declareProperty( "TolXRemaining"      , m_tolRemaining = {1.0,1.0,1.0});
     declareProperty( "maxChi2HitsX"       , m_maxChi2HitsX = {5.5,5.5,5.5});
     declareProperty( "maxChi2DoFX"        , m_maxChi2DoFX = {4.0,5.0,6.0});
@@ -200,10 +194,6 @@ StatusCode PrHybridSeeding::initialize() {
     if( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
     if(UNLIKELY(m_debug) ) debug() << "==> Initialize" << endmsg;
     m_hitManager= tool<PrHitManager>( m_hitManagerName );
-    
-    //m_FThitManager= tool<PrFTHitManager>(m_hitManagerName);
-    
-    
     m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
     m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
     m_zReference = StateParameters::ZMidT;
@@ -446,6 +436,9 @@ StatusCode PrHybridSeeding::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PrHybridSeeding::execute() {
+    
+    
+    
     if(UNLIKELY(m_debug) ) debug() << "==> Execute" << endmsg;
     if(UNLIKELY(m_doTiming) ){
         m_timerTool->start( m_timeTotal );
@@ -509,6 +502,7 @@ StatusCode PrHybridSeeding::execute() {
             seed->addToStates( (*itT)->closestState( 9000. ) );
             result->insert( seed );
         }
+        
     }
     //=======================================
     // Fill zones
@@ -535,9 +529,11 @@ StatusCode PrHybridSeeding::execute() {
     //========================================================
     // ----- Loop through lower and upper half
     for( unsigned int part= 0; 2 > part; ++part ){
+        
         //----- Loop For difference Cases
         //Swap them ? externally icase & inner loop part? m_xCandidates
         for(unsigned int icase = 0; m_nCases > icase ; ++icase){
+            
             
             if(UNLIKELY(m_doTiming)){
                 if( part ==0){
@@ -549,6 +545,7 @@ StatusCode PrHybridSeeding::execute() {
             // Find The X Projection
             m_xCandidates[(int)part].clear(); //x candidates up cleaned every Case!
             findXProjections(part,icase);
+            
             if(UNLIKELY(m_doTiming)){
                 if( part ==0){
                     m_timerTool->stop( m_timeXProjeUp[icase]);
@@ -648,53 +645,79 @@ StatusCode PrHybridSeeding::finalize() {
 }
 
 void PrHybridSeeding::CollectUV(  PrHybridSeedTrack& xProje,const std::vector<PrHitZone*>& uvZones, PrHits& myStereo){
+    //void PrHybridSeeding::CollectUV( PrHybridSeedTrack& xProje, const HitIteratorsPairs& uvZones, PrHits&myStereo){
     myStereo.clear();
+    //Add Stereo : ask if Associated X part is processed or not
+    //partic = MCParticle associated ( updated by AssocTrack method)
+    //efficiency = Hit efficiency on track ( nHitsAssociated / nHitsFound )
+    //AssocX = bool to tell if the track is associated
     unsigned int part = xProje.zone();
     for( PrHitZone* zoneUV: uvZones){
+        //for( auto zoneUV = uvZones.begin() ; zoneUV!= uvZones.end(); ++zoneUV ){
+        
         unsigned int kk = zoneUV->number();
+        //unsigned int kk = zoneUV.first.zone();
+        //unsigned int kk = (*(zoneUV.first)).zone();
+        //if(m_zones[kk]->isX()) continue; // Do not load x-layers
         float yMin = -1.*std::fabs(m_yMax);
+        //yMin = -2500 mm
         float yMax = +1.*std::fabs(m_yMax);
+        //yMax = +2500 mm
+        //yMin = -2500; yMax = 2500 here!
         float dxDy = m_zones[kk]->dxDy();  //Load the stereo Angle of that given layer
         float zPlane = m_zones[kk]->z();   //Load the z of the Plane
         float xPred = xProje.x(zPlane);
         float recDxDyZ = 1./(dxDy*zPlane);
         float recDxDy = 1./dxDy;
+        //Compute the predicted x-position in that given layer
+        //[-2500;+2500]
         if(yMin >yMax){
-            //std::cout<<"Swap yMin yMas"<<std::endl;
+            //should not happen
             std::swap( yMin, yMax);
         }
-        if(UNLIKELY(m_debug)){
-            if( yMax <yMin) error()<<"Stereo Problem"<<endmsg;
-        }
-        //if(m_doAsymmUV){
-        if(part==0){
-            yMin = m_yMin;
-            if(kk%2==1 && m_useFix){
-                yMin = +m_yMin_TrFix;
-                yMax = +m_yMax_TrFix;
+        if(msgLevel(MSG::ERROR) && yMax <yMin) error()<<"Stereo Problem"<<endmsg;
+        if(m_doAsymmUV){
+            if(part==0){
+                //UPPER TRACKS y>0
+                //Upper Tracks: expected y > 0 (m_yMin need to be negative , m_yMax need to be positive)
+                // yMin updated to be -1 mm , so
+                // Upper Tracks y in [ -1,+2500]
+                yMin = m_yMin;
+                //Upper Track Upper Modyule [-1,2500]
+                if(kk%2==1 && m_useFix){
+                    //kk%2=1 if kk =1,3,5,7 etc, i.e. you are reading Lower modules for a Upper track:
+                    //UPPER TRACK lower Module
+                    //y is set in [-30, 2.0]
+                    // yMax = +30.0;
+                    // yMin = -2.0;
+                    //[-2,30]
+                    yMin = +m_yMin_TrFix;
+                    //-2.0 mm
+                    yMax = +m_yMax_TrFix;
+                    //+30.0 mm
+                }
+            }else{
+                //LOWER TRACKS
+                //Lower tracks: expected y < 0 ( m_yMin need to be negative, m_yMax need to be positive)
+                //yMax updated from +2500 to +1 mm
+                //yMin remains -2500 mm
+                yMax = -m_yMin;
+                //+1.0 mm
+                //[-2500,+1] mm
+                if(kk%2==0 && m_useFix){
+                    //kk%2 = 0 if kk = 0,2,4,6 etx, i.e., you are reading Upper modules for a Lower track:
+                    //LOWER TRACK upper Module
+                    // y is set in [-30,+2]
+                    // yMin = -30.0;
+                    // yMax = +2.0;
+                    yMin = -m_yMax_TrFix;
+                    //-30.0 mm
+                    yMax = -m_yMin_TrFix;
+                    //+2.0 mm
+                    //[-30.,2.0]
+                }
             }
-        }else{
-            //LOWER TRACKS
-            //Lower tracks: expected y < 0 ( m_yMin need to be negative, m_yMax need to be positive)
-            //yMax updated from +2500 to +1 mm
-            //yMin remains -2500 mm
-            yMax = -m_yMin;
-            //+1.0 mm
-            //[-2500,+1] mm
-            if(kk%2==0 && m_useFix){
-                //kk%2 = 0 if kk = 0,2,4,6 etx, i.e., you are reading Upper modules for a Lower track:
-                //LOWER TRACK upper Module
-                // y is set in [-30,+2]
-                // yMin = -30.0;
-                // yMax = +2.0;
-                yMin = -m_yMax_TrFix;
-                //-30.0 mm
-                yMax = -m_yMin_TrFix;
-                //+2.0 mm
-                //[-30.,2.0]
-            }
         }
-        //        }
         //Compute the xMin value in the rotated reference system
         //Compute the xMax value in the rotated reference system
         //Due to dxDy being positive or negative ( yMin here is always < yMax ) you can have them swapped
@@ -709,60 +732,64 @@ void PrHybridSeeding::CollectUV(  PrHybridSeedTrack& xProje,const std::vector<Pr
         //Place the iterator at xMin predicted
         //unsigned int kk = zoneUV->number();
         //Optimize ( access to hit manager for ALL X-z Projections! )
-        auto itH = m_hitManager->getIterator_lowerBound( kk   , xMin);
+        auto itH = m_hitManager->getIterator_lowerBound( kk , xMin );
         auto itEnd = m_hitManager->getIterator_upperBound( kk ,xMax);
+        //auto itH = std::lower_bound( zoneUV->first, zoneUV->second, xMin, lowerBoundX());
+        //auto itEnd = std::upeer_bound( zoneUV->first, zoneUV->second, xMax, upperBoundX());
+        //auto itEnd = std::upper_bound( hits.begin(),hits.end(),xMax, upperBoundX());
         for( ; itEnd!= itH; ++itH ){
             if( (*itH).isUsed() && m_removeFlagged ) continue;
             //check if the u/v hit is used: do not use it again
             float y = ( xPred - (*itH).x() )*recDxDy;
             //compute y hit
             //should not happen actually
-            if(y >yMax || y <yMin ) continue; //may can skip this if
-            // if(m_useFix2ndOrder){
-            if(part == 0){
-                if(kk%2 == 0){
-                    //Up track up module
-                    if( (*itH).yMin()<0. ){
-                        yMin = m_yMin; yMax = m_yMax;   //[-1.0, 2500]
-                    }else{
-                        //Up track up module but yMin > 0 a
-                        yMin = -2.0 + std::fabs((*itH).yMin());yMax = m_yMax;}
-                }else{ // kk%2 ==1
-                    //Up Down
-                    if( (*itH).yMax()<0. ){  continue;
-                    }else{  yMin = -1.0 ;yMax = +2.0 + std::fabs((*itH).yMax());
+            if(y >yMax) continue;
+            if(y <yMin) continue;
+            if(m_useFix2ndOrder){
+                if(part == 0){
+                    if(kk%2 == 0){
+                        //Up track up module
+                        if( (*itH).yMin()<0. ){
+                            yMin = m_yMin; yMax = m_yMax;   //[-1.0, 2500]
+                        }else{
+                            //Up track up module but yMin > 0 a
+                            yMin = -2.0 + std::fabs((*itH).yMin());yMax = m_yMax;}
+                    }else{ // kk%2 ==1
+                        //Up Down
+                        if( (*itH).yMax()<0. ){  continue;
+                        }else{  yMin = -1.0 ;yMax = +2.0 + std::fabs((*itH).yMax());
+                        }
                     }
-                }
-            }else{ //part ==1 Down TRACK
-                if(kk%2 == 1){
-                    //Down Down modules
-                    if( (*itH).yMax()>0.){
-                        yMin = -std::fabs(m_yMax) ; yMax = +1.0; //[-2500, 1.0]
-                    }else{
-                        yMin = -std::fabs(m_yMax) ;yMax = +2.0-std::fabs((*itH).yMax()); // [ -2500, 2.0 ]
-                    }
-                }else{ //kk%2 == 0
-                    //Down Up
-                    if( (*itH).yMin()<0.){
-                        yMin = -2.0 - std::fabs((*itH).yMin());yMax = +1.0;
-                    }else{
-                        continue;
+                }else{ //part ==1 Down TRACK
+                    if(kk%2 == 1){
+                        //Down Down modules
+                        if( (*itH).yMax()>0.){
+                            yMin = -std::fabs(m_yMax) ; yMax = +1.0; //[-2500, 1.0]
+                        }else{
+                            yMin = -std::fabs(m_yMax) ;yMax = +2.0-std::fabs((*itH).yMax()); // [ -2500, 2.0 ]
+                        }
+                    }else{ //kk%2 == 0
+                        //Down Up
+                        if( (*itH).yMin()<0.){
+                            yMin = -2.0 - std::fabs((*itH).yMin());yMax = +1.0;
+                        }else{
+                            continue;
+                        }
                     }
                 }
             }
-            //            }
             if(UNLIKELY(m_debug)){
                 debug()<<"y Hit computed    "<< y<<endmsg;
             }
             if(y>yMax || y< yMin) continue;
-            // if(m_removeHole){
-            float radius =  y*y + xPred*xPred;
-            if(  radius < m_radiusHole*m_radiusHole) continue;
-            // }
+            if(m_removeHole){
+                float radius =  y*y + xPred*xPred;
+                if(  radius < m_radiusHole*m_radiusHole) continue;
+            }
             //Absolute value!
-            if( part == 0 && y<0.){
+            if( part == 0 && y<0.)
                 (*itH).setCoord( -1.*std::fabs((xPred-(*itH).x())*recDxDyZ));
-            }else if( part == 1 && y>0.){
+            if( part == 1 && y>0.){
                 (*itH).setCoord( -1.*std::fabs((xPred-(*itH).x())*recDxDyZ));
             }else{
                 (*itH).setCoord( std::fabs( (xPred - (*itH).x() )*recDxDyZ ) );
@@ -776,6 +803,7 @@ void PrHybridSeeding::CollectUV(  PrHybridSeedTrack& xProje,const std::vector<Pr
         }
     }
 }
+
 void PrHybridSeeding::addStereo( unsigned int part, unsigned int iCase){
     // always()<<"Adding stereo 2"<<endmsg;
     bool reco = false;
@@ -784,26 +812,31 @@ void PrHybridSeeding::addStereo( unsigned int part, unsigned int iCase){
         iCase =2;
     }
     std::vector<PrHitZone*> uvZones;
-    // if(m_useFix){
-    uvZones.reserve(12);
-    // }else{
-    //     uvZones.reserve(6);
-    // }
+    //std::vector<std::pair<PtHits::iterator , PtHits::iterator> >  uvZones;
+    // std::pair< std::vector< PrHits::iterator , PrHits::iterator > > uvZones;
+    // std::vector< PrHits::iterator, PrHits::iterator>
+    //std::vector< IteratorPair> uvZones;
+    //HitIteratorsPairs uvZones;
+    if(m_useFix){
+        uvZones.reserve(12);
+    }else{
+        uvZones.reserve(6);
+    }
     //can be merged
-    // if(m_useFix){
-    //load vector of zones
-    for( unsigned int detector_part :{0,1}){
-        for( unsigned int uvZoneID :{ s_T1U, s_T1V,s_T2U,s_T2V,s_T3U,s_T3V}){
-            if(UNLIKELY(m_debug)) always()<<"Push back zone = "<<uvZoneID+detector_part<<endmsg;
-            if( m_zones[uvZoneID|detector_part]->isX()) always()<<"ERROR LOAD"<<endmsg;
-            uvZones.push_back( m_zones[uvZoneID | detector_part]);
+    if(m_useFix){
+        //load vector of zones
+        for( unsigned int detector_part :{0,1}){
+            for( unsigned int uvZoneID :{ s_T1U, s_T1V,s_T2U,s_T2V,s_T3U,s_T3V}){
+                if(UNLIKELY(m_debug)) always()<<"Push back zone = "<<uvZoneID+detector_part<<endmsg;
+                if( m_zones[uvZoneID|detector_part]->isX()) always()<<"ERROR LOAD"<<endmsg;
+                uvZones.push_back( m_zones[uvZoneID | detector_part]);
+            }
+        }
+    }else{
+        for( unsigned int uvZoneID :{s_T1U, s_T1V,s_T2U,s_T2V,s_T3U,s_T3V}){
+            uvZones.push_back( m_zones[uvZoneID | part]);
         }
     }
-    // }else{
-    //   for( unsigned int uvZoneID :{s_T1U, s_T1V,s_T2U,s_T2V,s_T3U,s_T3V}){
-    //     uvZones.push_back( m_zones[uvZoneID | part]);
-    //   }
-    // }
     PrHits myStereo;
     myStereo.reserve(400);
     PrPlaneHybridCounter plCount;
@@ -1069,7 +1102,6 @@ void PrHybridSeeding::addStereo( unsigned int part, unsigned int iCase){
         }
     }
 }
-
 //counting the planes with builtin function ( compiler function )
 // int nplanes = 0;
 // for ( hit: itBeg ...itEnd){
@@ -1355,40 +1387,8 @@ void PrHybridSeeding::makeLHCbTracks( LHCb::Tracks* result, unsigned int part){
         result->insert( out);
     }
 }
-float PrHybridSeeding::ParabolicTol(  const PrHit* hitT1 ,  const PrHit* hitT3, float ZToCompute, float zT2, float xT2 ){
-    const float z1 = hitT1->z() - m_zReference;//
-    const float z2 = zT2 - m_zReference;//
-    const float z3 = hitT3->z() - m_zReference;//
-    const float x1 = hitT1->x();
-    const float x2 = xT2;
-    const float x3 = hitT3->x();
-    
-    const float corrZ1 = 1.+m_dRatio*z1;
-    const float corrZ2 = 1.+m_dRatio*z2;
-    const float corrZ3 = 1.+m_dRatio*z3;
-    const float det = (z1*z1)*corrZ1*z2 + z1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*z3 - z2*(z3*z3)*corrZ3 - z1*(z2*z2)*corrZ2 - z3*(z1*z1)*corrZ1;
-    const float recdet = 1./det;
-    const float dzC = ZToCompute - m_zReference;
-    float a1,b1,c1;
-    
-    if( std::fabs(det) < 1e-8 ){
-        //return a line
-        b1 = (x3-x1)/(z3-z1);
-        c1 = x1 - b1*(z1);
-        a1 = 0.f;
-        return b1*(dzC) + c1;
-    }
-    const float det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
-    const float det2 = (z1*z1)*corrZ1*x2 + x1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*x3 - x2*(z3*z3)*corrZ3 - x1*(z2*z2)*corrZ2 - x3*(z1*z1)*corrZ1;
-    const float det3 = (z1*z1)*corrZ1*z2*x3 + z1*(z3*z3)*corrZ3*x2 + (z2*z2)*corrZ2*z3*x1 - z2*(z3*z3)*corrZ3*x1 - z1*(z2*z2)*corrZ2*x3 - z3*(z1*z1)*corrZ1*x2;
-    // a1 = det1/det;
-    // b1 = det2/det;
-    // c1 = det3/det;
-    a1 = recdet*det1;
-    b1 = recdet*det2;
-    c1 = recdet*det3;
-    return a1*dzC*dzC*(1.+m_dRatio*dzC)+ b1*dzC + c1 ;
-}
+
+
 
 void PrHybridSeeding::solveParabola(const PrHit* hit1,const PrHit* hit2,const PrHit* hit3,float& a1, float& b1,float& c1){
     const float z1 = hit1->z() - m_zReference;//
@@ -1404,9 +1404,9 @@ void PrHybridSeeding::solveParabola(const PrHit* hit1,const PrHit* hit2,const Pr
     const float det = (z1*z1)*corrZ1*z2 + z1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*z3 - z2*(z3*z3)*corrZ3 - z1*(z2*z2)*corrZ2 - z3*(z1*z1)*corrZ1;
     const float recdet = 1./det;
     if( std::fabs(det) < 1e-8 ){
-        b1 = (x3-x1)/(z3-z1);
-        c1 = x1 - b1*z1;
-        a1 = 0.f;
+        a1 = 0.0;
+        b1 = 0.0;
+        c1 = 0.0;
         return;
     }
     const float det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
@@ -1676,7 +1676,6 @@ void PrHybridSeeding::printHit( const PrHit& hit, std::string title){
     printHit(&hit,title);
 }
 
-
 void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
     PrHits parabolaSeedHits; // List of hits in both x-layers in T2
     parabolaSeedHits.reserve(12);
@@ -1685,251 +1684,327 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
     PrHits xHits;
     xHits.reserve(6);
     //-----------------------------------------------------Identifying layers [start]--------------------------------------------
-    //just do the 1st one here 1st layer and last one
+    //just do the 1st one here //1st layer and last one
+    /* unsigned int firstZoneId = -1;
+     unsigned int lastZoneId = -1;
+     if(0 == iCase){
+     firstZoneId = s_T1X1 | part; // s_T1X1 = 0 and part = 0 or 1
+     lastZoneId  = s_T3X2 | part;
+     }else if ( 1 == iCase ){
+     firstZoneId = s_T1X2 | part; // s_T1X2 = 6 and part = 0 or 1 , so s_T1X2 | part = 6 or 7 (that's why for consectuve layers : s_T1X1=s_T1U+2)
+     lastZoneId  = s_T3X1 | part;
+     }else if ( 2 == iCase ){
+     firstZoneId = s_T1X1 | part;
+     lastZoneId  = s_T3X1 | part;
+     }else if ( 3 == iCase ){
+     firstZoneId = s_T1X2 | part;
+     lastZoneId  = s_T3X2 | part;
+     }
+     if(UNLIKELY(m_debug)){ debug()<<"\t Loading Case Hit in first and last Zone"<<endmsg;}
+     PrHitZone* fZone = m_zones[firstZoneId]; //in private: std::vector<PrHitZone*>        m_zones;
+     PrHitZone* lZone = m_zones[lastZoneId];
+     if(UNLIKELY(m_debug)){ debug()<<"Hits in last and first Zone Loaded"<<endmsg;}
+     float zFirst     = fZone->z(0.); //First  Zone Z value
+     float zLast      = lZone->z(0.); //First  Zone Z value
+     float invDeltaZ = 1./(zLast-zFirst);     //Delta First-Last
+     std::vector<PrHitZone*> xZones;
+     xZones.reserve(4);
+     for(unsigned int xZoneId : {s_T1X1, s_T1X2, s_T2X1, s_T2X2, s_T3X1, s_T3X2}){
+     xZoneId |= part;
+     if(xZoneId != firstZoneId && xZoneId != lastZoneId){
+     xZones.push_back( m_zones[xZoneId] );
+     }
+     }*/
+    
     unsigned int firstZoneId = -1;
     unsigned int lastZoneId = -1;
-    std::array<PrHitZone*,NLAYERS> zones;
+    PrHitZone* fZone;
+    PrHitZone* lZone;
+    
+    std::vector<PrHitZone*> xZones;
+    xZones.reserve(4);
     if(0 == iCase){
-        firstZoneId = s_T1X1 | part;
-        lastZoneId  = s_T3X2 | part;
+        firstZoneId =  s_T1X1 | part;
+        lastZoneId  =  s_T3X2 | part;
+        
+        fZone = m_zones[firstZoneId];
+        lZone  = m_zones[lastZoneId];
+        xZones.push_back( m_zones[ s_T1X2 | part] );
+        xZones.push_back( m_zones[ s_T2X1 | part] );
+        xZones.push_back( m_zones[ s_T2X2 | part] );
+        xZones.push_back( m_zones[ s_T3X1 | part] );
     }else if ( 1 == iCase ){
-        firstZoneId = s_T1X2 | part;
+        firstZoneId = s_T1X2 | part; // s_T1X2 = 6 and part = 0 or 1 , so s_T1X2 | part = 6 or 7 (that's why for consectuve layers : s_T1X1=s_T1U+2)
         lastZoneId  = s_T3X1 | part;
+        
+        fZone = m_zones[firstZoneId];
+        lZone  = m_zones[lastZoneId];
+        xZones.push_back( m_zones[ s_T1X1 | part] );
+        xZones.push_back( m_zones[ s_T2X1 | part] );
+        xZones.push_back( m_zones[ s_T2X2 | part] );
+        xZones.push_back( m_zones[ s_T3X2 | part] );
     }else if ( 2 == iCase ){
         firstZoneId = s_T1X1 | part;
         lastZoneId  = s_T3X1 | part;
+        
+        fZone = m_zones[firstZoneId];
+        lZone  = m_zones[lastZoneId];
+        xZones.push_back( m_zones[ s_T1X2 | part] );
+        xZones.push_back( m_zones[ s_T2X1 | part] );
+        xZones.push_back( m_zones[ s_T2X2 | part] );
+        xZones.push_back( m_zones[ s_T3X2 | part] );
     }else if ( 3 == iCase ){
         firstZoneId = s_T1X2 | part;
         lastZoneId  = s_T3X2 | part;
-    }
-    if(UNLIKELY(m_debug)){ debug()<<"\t Loading Case Hit in first and last Zone"<<endmsg;}
-    zones[0]=m_zones[firstZoneId];
-    zones[1]=m_zones[lastZoneId];
-    if(UNLIKELY(m_debug)){ debug()<<"Hits in last and first Zone Loaded"<<endmsg;}
-    zones[2]=m_zones[s_T2X1|part];
-    zones[3]=m_zones[s_T2X2|part];
-    unsigned int i=4;
-    for(unsigned int xZoneId : {s_T1X1, s_T1X2, s_T3X1, s_T3X2}){
-        xZoneId =xZoneId | part;
-        if(xZoneId != firstZoneId && xZoneId != lastZoneId){
-            zones[i]=m_zones[xZoneId];
-            i++;
-        }
-    }
-    
-    
-    float invZfirst = 1./zones[0]->z();
-    float Zlast  = zones[1]->z();
-    float Zfirst = zones[0]->z();
-    float invZlZf = 1./( zones[1]->z() - zones[0]->z());
-    float slope = (m_tolAtX0Cut[iCase]-m_TolX0SameSign[iCase])/(m_x0Cut[iCase]-m_x0SlopeChange[iCase]);
-    float slopeopp =  (m_tolAtx0CutOppSig[iCase] -m_tolX0Oppsig[iCase])/(m_x0Cut[iCase]-m_x0SlopeChange2[iCase]);
-    
-    Boundaries Bounds;
-    Boundaries Bounds_2;
-    //============Initialization
-    std::array< HitIterat, 6> endsZone;
-    endsZone[0] = m_hitManager->getIterator_End(zones[0]->number());
-    for(int i=1;i<NLAYERS;i++){//Always: first=0 last=1 middles=2,3 remains=4,5 (order of loops)
-        m_hitManager->InitializeBB(Bounds[i],zones[i]->number());
-        endsZone[i] = m_hitManager->getIterator_End( zones[i]->number());
-    }
-    //All of them will get the .begin() = begin_zone, .end() = end_zone.
-    //===FIRST LAYER LOOP===
-    PrHit *fHit;
-    //Since you have to loop through all of them!
-    Bounds[0].begin  = m_hitManager->getIterator_Begin(zones[0]->number());
-    Bounds[0].end = m_hitManager->getIterator_End(zones[0]->number());
-    for(; Bounds[0].begin != Bounds[0].end; Bounds[0].begin++) //for a hit in first layer
-    {
-        fHit = &(*(Bounds[0].begin));
-        if( fHit->isUsed() && m_removeFlagged) continue;
-        float tx_inf = fHit->x() * invZfirst;
-        float xProjeInf = tx_inf *Zlast ;
-        float tolHp = m_TolFirstLast[iCase];
-        float maxXl = xProjeInf + tx_inf*m_alphaCorrection[iCase] +tolHp;
-        float minXl = xProjeInf + tx_inf*m_alphaCorrection[iCase] -tolHp;
-        // if( maxXl < minXl){
-        //   std::cout<<"maxXl < minXl"<<std::endl;
-        //   std::swap( minXl, maxXl);
-        // }
-        //HERE0
-        //update last layer upperbound
-        //No way to know an upper limit to look at! Linear search instead?
-        //Logaritmic search looking until end of module! ( no way to get rid of it , except of doing a linear search)
-        //conservative .begin
-        if(m_log){
-            Bounds[1].end    = m_hitManager->get_upperBound_log( Bounds[1].begin, endsZone[1] , maxXl);
-            //Linear search of end element
-            //Bounds[1].end    = m_hitManager->get_upperBound_lin( Bounds[1].end, endLast, maxXl );
-            //First element from old begin and new end, assumes minXl next hit > minXl prev hit!
-            Bounds[1].begin  = m_hitManager->get_lowerBound_log( Bounds[1].begin , Bounds[1].end, minXl  );
-        }else{
-            Bounds[1].end = m_hitManager->get_upperBound_lin( Bounds[1].begin, endsZone[1], maxXl);
-            Bounds[1].begin = m_hitManager->get_lowerBound_lin( Bounds[1].begin, Bounds[1].end, minXl);
-        }
-        //Linear search of beg element in "new subrange"
-        //Bounds[1].begin = m_hitManager->get_lowerBound_lin( Bounds[1].begin, Bounds[1].end, maxXl);
         
-        // std::cout<<"Last layer Begin : "<<(*Bounds[1].begin).x()<<"\n Last layer End :"<<(*Bounds[1].end).x();
-        //here starting from second since before you had a different window!!!
-        if( (Bounds[1].end - Bounds[1].begin) == 0 ){
-            //No hits in the range !
-            // std::cout<<"Same end begin last layer"<<std::endl;
-            continue;
+        fZone = m_zones[firstZoneId];
+        lZone  = m_zones[lastZoneId];
+        xZones.push_back( m_zones[ s_T1X1 | part] );
+        xZones.push_back( m_zones[ s_T2X1 | part] );
+        xZones.push_back( m_zones[ s_T2X2 | part] );
+        xZones.push_back( m_zones[ s_T3X1 | part] );
+    }
+    if(UNLIKELY(m_debug)){ debug()<<"Hits in all Zones Loaded"<<endmsg;}
+    
+    float zFirst     = fZone->z(0.); //First  Zone Z value
+    float zLast      = lZone->z(0.); //First  Zone Z value
+    float invDeltaZ = 1./(zLast-zFirst);     //Delta First-Last
+    
+    
+    
+    //-----------------------------------------------------Identifying layers [end]--------------------------------------------
+    if(UNLIKELY(m_debug)){
+        debug()<<"Hits in the InBetween Zones Loaded"<<endmsg;
+        debug()<<"Will Loop over Hits in first Zone"<<endmsg;
+    }
+    auto HitF = m_hitManager->getIterator_Begin( firstZoneId);
+    auto fHitEnd = m_hitManager->getIterator_End( firstZoneId);
+    //auto HitF0 = HitF;
+    //Test_Rabah
+    //  auto HitF_prev = m_hitManager->getIterator_Begin( firstZoneId);
+    PrHit* fHit ;
+    //first layer loop
+    bool loop1justStarted=1;
+    //looping in last layer
+    std::vector<PrHit>::iterator Lbound;
+    std::vector<PrHit>::iterator Ubound;
+    std::vector<PrHit>::iterator Lbound_prev;
+    
+    //looping in middle layers
+    std::vector<PrHit>::iterator itMBeg;
+    std::vector<PrHit>::iterator itMEnd;
+    std::vector<PrHit>::iterator itMBeg_prev[2]; // for the 2 X middle layers
+    bool loop2justStarted=1;
+    double xMin_prev[2];
+    
+    //looping in remaining layers
+    std::vector<PrHit>::iterator itH;
+    std::vector<PrHit>::iterator itHEnd;
+    std::vector<PrHit>::iterator itH_prev[12]; //for the 4 remaining layers (other than 1st layer and last layer)
+    itH_prev[firstZoneId/2]=m_hitManager->getIterator_End(firstZoneId);
+    itH_prev[lastZoneId/2]=m_hitManager->getIterator_End(lastZoneId);
+    for(auto xZone :xZones){
+        itH_prev[xZone->planeCode()]=m_hitManager->getIterator_End( xZone->number());} //initiate
+    double xMinAtZ_prev[12];
+    //bool All_it_set=1;
+    for( ; HitF!= fHitEnd; ++HitF){ //---------------------------------------------------------------------------------
+        if(UNLIKELY(m_debug)){ debug()<<"Next Fitst Layer Hit"<<endmsg;}
+        fHit = &(*HitF);
+        if( fHit->isUsed() && m_removeFlagged) {continue;}
+        ////define search window as a function of the x in the first layer
+        //float tx_inf =  (*fHit).x()/zFirst;
+        float tx_inf = fHit->x()/zFirst;
+        float xProjeInf = tx_inf*zLast;
+        float tolHp = m_TolFirstLast[iCase];
+        //From Branch ImproveIt we change the alphaCOrrection : case 1 : 1988.63; case 2 : 2354.0
+        //For all cases except case = 0
+        float maxXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  +tolHp;
+        float minXl = xProjeInf + tx_inf*m_alphaCorrection[iCase]  -tolHp;;
+        if(maxXl < minXl){ //should never happen!
+            std::swap( minXl, maxXl);
         }
-        float slopeMax = ( maxXl -  fHit->x()  )* invZlZf;
-        float slopeMin = ( minXl -  fHit->x()  )* invZlZf;
-        float MAX, MIN;
-        for(int i=2;i<6;i++){
-            MAX =  fHit->x() + slopeMax * ( zones[i]->z() - Zfirst);
-            MIN =  fHit->x() + slopeMin * ( zones[i]->z() - Zfirst);
-            if( MAX < MIN ){
-                //if first layer is at z > z_i it can happen!
-                //also need to enlarge things for T2
-                std::swap( MIN, MAX);
+        if(UNLIKELY(m_debug)) debug()<<"iCase "<<iCase<<"\t X last Min \t "<<minXl<<"\n\t\t\t Max X last \t "<<maxXl<<endmsg;
+        if(UNLIKELY(m_debug)) debug()<<"Will Loop over Last Layer"<<endmsg;
+        
+        //auto Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+        // auto Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+        
+        //-----------------------------------------------WORK PLACE-------------------------------------------------------------
+        //Efficiencies are CONSERVED via this method relatively to the old one
+        //Tag: Rabah
+        if(loop1justStarted)
+        {
+            Lbound = m_hitManager->getIterator_lowerBound( lastZoneId, minXl);
+            Ubound = m_hitManager->getIterator_upperBound( lastZoneId, maxXl);
+            loop1justStarted=false;
+        }
+        else
+        {
+            Lbound=Lbound_prev;
+            while((*Lbound).x()<minXl)
+            {
+                if(Lbound==m_hitManager->getIterator_End( lastZoneId)) break;
+                else Lbound++;
+            } // Verified: The hits in the vector<PrHit> are sorted by ascending value of their x.
+            
+            
+            Ubound=Lbound; // we start from the new Lbound set, to find Ubound
+            
+            while((*Ubound).x()<maxXl) //for(;(*Ubound).x()<maxXl && (&(*Ubound))!=NULL; Ubound++)
+            {
+                if(Ubound==m_hitManager->getIterator_End( lastZoneId)) break;
+                else Ubound++;
+                
             }
-            //Logaritmic
-            if(m_log){
-                Bounds[i].end = m_hitManager->get_upperBound_log( Bounds[i].end, endsZone[i], MAX + 10.0);
-                //Linear
-                //Bounds[i].end = m_hitManager->get_upperBound_lin( Bounds[i].end, m_hitManager->getIterator_End( zones[i]->number()),MAX);
-                Bounds[i].begin = m_hitManager->get_lowerBound_log( Bounds[i].begin, Bounds[i].end, MIN - 10.0);
-            }else{
-                Bounds[i].end = m_hitManager->get_upperBound_lin(Bounds[i].end, endsZone[i], MAX +10.0);
-                Bounds[i].begin = m_hitManager->get_lowerBound_lin( Bounds[i].begin, Bounds[i].end, MIN-10.0);
-            }
-            //Linear
-            //Bounds[i].begin = m_hitManager->get_lowerBound_lin( Bounds[i].begin(), Bounds[i].end, MIN);
-        }//endloop
+        }
+        Lbound_prev=Lbound;
+        //-----------------------------------------------WORK PLACE-------------------------------------------------------------
+        
+        //---------------
+        /*  if(HitF!=HitF_prev)
+         {
+         if((&(*HitF))->x()>(&(*HitF_prev))->x())
+         std::cout<<"The hits in first layer are sorted in x !"<<std::endl;
+         else
+         std::cout<<"The hits in first layer are NOT SORTED  !"<<std::endl;
+         }
+         HitF_prev = HitF;
+         */
+        
+        
+        
+        //---------------
         PrHit* lHit;
-        float tx_pickedcombination;
-        float x0;
-        float CorrX0;
-        float x0new;
-        float xMax;
-        float xMin;
-        float max = 0.;
-        float min = 0.;
-        // float slope;
-        // float slopeopp;
-        float xProjected;
-        float xProjectedCorrected;
-        int nfired ;
-        for(auto Lhit=Bounds[1].begin; Lhit != Bounds[1].end; ++Lhit){
-            lHit = &(*Lhit);
-            if(lHit->isUsed() && m_removeFlagged) continue;
-            tx_pickedcombination = (lHit->x() - fHit->x())*invZlZf;
-            x0 = fHit->x() - tx_pickedcombination*Zfirst;
-            CorrX0 = m_x0Corr[iCase]*x0;
-            x0new = x0*(1.+m_x0Corr[iCase]);
-            if(x0>0.){
-                min = x0 > m_x0SlopeChange[iCase]?  -slope*( x0 - m_x0SlopeChange[iCase]) - m_TolX0SameSign[iCase] : -m_TolX0SameSign[iCase];
-                max = x0 > m_x0SlopeChange2[iCase]? slopeopp*( x0 - m_x0SlopeChange2[iCase]) + m_tolX0Oppsig[iCase] : +m_tolX0Oppsig[iCase];
-            }else{
-                max = x0 < - m_x0SlopeChange[iCase]? -slope*( x0 + m_x0SlopeChange[iCase]) + m_TolX0SameSign[iCase]: m_TolX0SameSign[iCase];
-                min = x0 < - m_x0SlopeChange2[iCase]? slopeopp*( x0 + m_x0SlopeChange2[iCase]) - m_tolX0Oppsig[iCase]: -m_tolX0Oppsig[iCase] ;
-            }
-            nfired = 2;
-            // float zMaxT2 = std::numeric_limits<float>::min();
-            // float zMinT2 = std::numeric_limits<float>::max();
-            // float xMaxT2 = std::numeric_limits<float>::min();
-            // float xMinT2 = std::numeric_limits<float>::max();
-            for( int i = 2; i<4; i++){
-                xProjected = x0 + zones[i]->z()*tx_pickedcombination ;
-                xProjectedCorrected = xProjected + CorrX0 ;
-                xMin =   xProjectedCorrected + min ;
-                xMax =   xProjectedCorrected + max ;
-                //here we want to move backward the .end in the begin / end range
-                //both logaritmic
-                if( m_log){
-                    //Assume you have always to move backward from previously defined windows!!!
-                    Bounds_2[i].end = m_hitManager->get_upperBound_log_reverse( Bounds[i].begin, Bounds[i].end, xMax);
-                    Bounds_2[i].begin = m_hitManager->get_lowerBound_log( Bounds[i].begin, Bounds_2[i].end, xMin );
-                    //Linear backward research
-                }else{
-                    Bounds_2[i].end = m_hitManager->get_upperBound_lin_reverse( Bounds[i].begin, Bounds[i].end, xMax);
-                    Bounds_2[i].begin = m_hitManager->get_lowerBound_lin( Bounds[i].begin, Bounds_2[i].end, xMin);
+        //loop trough hits in last layer
+        //if(UNLIKELY(Lbound == Ubound)) continue;
+        for( ; Lbound!=Ubound; ++Lbound){  //------------------------------------------------------FOR
+            
+            lHit = &(*Lbound);
+            if(UNLIKELY(m_debug)){
+                debug()<<"Next Last layer hit"<<endmsg;
+                //should never happen in principle
+                if(nullptr == lHit){
+                    if (m_debug) debug()<<"Not Picking Hits in Last layer in the good search Window"<<endmsg;
+                    //break;
                 }
-                // if(Bounds_2[i].end < endsZone[i]
-                //    && (*(Bounds_2[i].end)).x() <xMax) {
-                //   //std::cout<<"Problem Here end zone 2,3"<<std::endl;
-                // }
-                // if( (*Bounds_2[i].begin).x() < xMin ){
-                //   //std::cout<<"Problem Here begin zone 2,3"<<std::endl;
-                // }
-                //Linear
-                //Bounds_2[i].begin = get_lowerBound_lin( Bounds_2[i].begin, Bounds_2[i].end, xMin);
-                // if( xMin < xMinT2){
-                //   xMinT2 = xMin;
-                //   zMinT2 = zones[i]->z();
-                // }
-                // if( xMax > xMaxT2){
-                //   xMaxT2 = xMax;
-                //   zMaxT2 = zones[i]->z();
-                // }
-                nfired += ( Bounds_2[i].end - Bounds_2[i].begin >0 );
-                // if( Bounds_2[i].end - Bounds_2[i].begin ==1){
-                //   if( (*(Bounds_2[i].begin)).isUsed() && m_removeFlagged) nfired--;
-                // }
             }
-            if( nfired <3){
-                continue;
-            }
-            for( int i =4; i<6; ++i){
-                xProjected = x0 + zones[i]->z()*tx_pickedcombination;
-                // xMin = ParabolicTol( fHit, lHit, zones[i]->z(), zMinT2, xMinT2);
-                // xMax = ParabolicTol( fHit, lHit, zones[i]->z(), zMaxT2, xMaxT2);
-                // if( xMin > xMax){
-                //   //std::cout<<"swap min max loop parabolictol"<<std::endl;
-                //   std::swap( xMin, xMax);
-                // }
-                xMin = xProjected-10.0;
-                xMax = xProjected+10.0;
-                //both logaritmic
-                if(m_log){
-                    Bounds_2[i].end = m_hitManager->get_upperBound_log_reverse( Bounds[i].begin, Bounds[i].end, xMax);
-                    //Linear
-                    //Bounds_2[i].end = get_upperBound_lin_reverse( Bounds_2[i].begin, Bounds_2[i].end, xMax);
-                    Bounds_2[i].begin = m_hitManager->get_lowerBound_log( Bounds[i].begin, Bounds_2[i].end, xMin);
-                }else{
-                    Bounds_2[i].end = m_hitManager->get_upperBound_lin_reverse( Bounds[i].begin, Bounds[i].end, xMax);
-                    Bounds_2[i].begin = m_hitManager->get_lowerBound_lin( Bounds[i].begin, Bounds_2[i].end, xMin);
-                }
-                //Linear
-                //Bounds_2[i].begin = get_lowerBound_lin( Bounds_2[i].begin, Bounds_2[i].end, xMin);
-                //nfired += ( Bounds_2[i].end - Bounds_2[i].begin >0 );
-                // if(Bounds_2[i].end < endsZone[i]
-                //    && (*(Bounds_2[i].end)).x() <xMax){
-                //   //std::cout<<"Problem Here end zone 2,3"<<std::endl;
-                // }
-                // if( (*Bounds_2[i].begin).x() < xMin ){
-                //   //std::cout<<"Problem Here begin zone 2,3"<<std::endl;
-                // }
-            }
-            // if(UNLIKELY(m_debug)) debug()<<"Not Picking Hits in Last layer in the good search Window"<<endmsg;
-            // if( nfired <5){
-            //   continue;
-            // }
+            if(lHit->isUsed() && m_removeFlagged){continue;}
+            float tx_pickedcombination = (lHit->x()-fHit->x())*invDeltaZ;
             parabolaSeedHits.clear();
+            float x0 = fHit->x()-tx_pickedcombination*zFirst;
+            float CorrX0 = m_x0Corr[iCase]*x0;
+            float x0new = x0*(1.+m_x0Corr[iCase]);
             if(UNLIKELY( m_debug )){
                 debug() <<" x0 " << x0 << "CorrX0" << CorrX0 << "x0new" << x0new << "slope"<< m_x0Corr[iCase]<< endmsg;
                 debug()<<"Will loop over Parabola Seed Hits: n Layers"<<m_zones.size()<<endmsg;
             }
-            for(int i=2;i<4;i++){
-                if(UNLIKELY(m_debug) )debug()<<"Will Loop over xZones Hits"<<endmsg;
-                auto itM = Bounds_2[i].begin;
-                for( ; itM!= Bounds_2[i].end; ++itM){
-                    //--------------------------------------------------------------------FOR
-                    if((*itM).isUsed() && m_removeFlagged) continue;
-                    if(UNLIKELY( m_debug)) debug()<<"Filling Parabola Seed Hits"<<endmsg;
-                    parabolaSeedHits.push_back( &(*itM ));
+            
+            
+            
+            int zone_index=0;
+            for(PrHitZone* xZone : {m_zones[s_T2X1 | part], m_zones[s_T2X2 | part]}) { //------------------------------------------------------FOR
+                
+                float xProjected = x0 + xZone->z()*tx_pickedcombination;
+                float xProjectedCorrected = xProjected+CorrX0;
+                float xMax =0.;
+                float xMin =0.;
+                float max = 0.;
+                float min = 0.;
+                float slope = (m_tolAtX0Cut[iCase]-m_TolX0SameSign[iCase])/(m_x0Cut[iCase]-m_x0SlopeChange[iCase]);
+                float slopeopp = (m_tolAtx0CutOppSig[iCase] -m_tolX0Oppsig[iCase])/(m_x0Cut[iCase]-m_x0SlopeChange2[iCase]);
+                if(x0>0.){
+                    max = m_TolX0SameSign[iCase];
+                    min = x0 > m_x0SlopeChange[iCase]?  -slope*( x0 - m_x0SlopeChange[iCase]) - m_TolX0SameSign[iCase] : -m_TolX0SameSign[iCase];
+                    xMin = xProjectedCorrected + min;
+                    max = x0 > m_x0SlopeChange2[iCase]? slopeopp*( x0 - m_x0SlopeChange2[iCase]) + m_tolX0Oppsig[iCase] : +m_tolX0Oppsig[iCase];
+                    xMax = xProjectedCorrected + max;
+                }else{
+                    max = x0 < - m_x0SlopeChange[iCase]? -slope*( x0 + m_x0SlopeChange[iCase]) + m_TolX0SameSign[iCase]: m_TolX0SameSign[iCase];
+                    min = x0 < - m_x0SlopeChange2[iCase]? slopeopp*( x0 + m_x0SlopeChange2[iCase]) - m_tolX0Oppsig[iCase]: -m_tolX0Oppsig[iCase] ;
+                    xMin = xProjectedCorrected + min;
+                    xMax = xProjectedCorrected + max;
+                }
+                if(xMin > xMax) always()<<"Error xMin xMax"<<endmsg;
+                if( xMax<xMin && m_debug) debug()<<"\t\t\t\t\t Wrong xMax/xMin"<<endmsg;
+                if( m_debug) debug()<<"Lower bound the zones"<<endmsg;
+                //auto itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+                //auto itMEnd = m_hitManager->getIterator_End( xZone->number() );
+                
+                
+                
+                //-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
+                //Tag: Rabah    same idea as before (Not quiet the same though)
+                //Verified: Effeciencies Are Conserved
+                
+                if(loop2justStarted) // Using the getIterator_lowerBound only for the first Lbound to find in the layer (executed once per layer)
+                {
+                    itMBeg = m_hitManager->getIterator_lowerBound( xZone->number(), xMin );
+                    itMEnd = m_hitManager->getIterator_End( xZone->number() );
+                    if(zone_index==1)
+                        loop2justStarted=false;
+                }
+                else
+                {
+                    itMBeg=itMBeg_prev[zone_index];
+                    
+                    if(xMin>xMin_prev[zone_index])
+                    {
+                        while((*itMBeg).x()<xMin) //because xMin is dependant on x0, (not constante as before in Lbound)
+                        {if(itMBeg==m_hitManager->getIterator_End( xZone->number())) break;
+                            else itMBeg++;}
+                    }
+                    else
+                    {
+                        if(xMin!=xMin_prev[zone_index]) // excluded the case where the bound is not changed from previous
+                        {
+                            while((*itMBeg).x()>xMin)
+                            {if(itMBeg==m_hitManager->getIterator_Begin( xZone->number())) break;
+                                else itMBeg--;}
+                            itMBeg++;
+                            
+                        }
+                    }
+                    
+                    itMEnd=m_hitManager->getIterator_End( xZone->number());//tolerances for xMin/xMax for hits in T2 are small (maximum 10 /15 mm), it’s useless to do the upper bound call
+                    
+                    
+                }
+                itMBeg_prev[zone_index]=itMBeg; // m_zone_index = 0 or 1 for T2X1, and T2X2
+                xMin_prev[zone_index]=xMin;
+                
+                /*
+                 //TEST ZONE [start]
+                 if(zone_index==0){ //one of the layer is enough to compare
+                 std::cout<<"MIDDLE "<<zone_index+1<<std::endl;
+                 std::cout<<"You are in part:"<<part<<" and case:"<<iCase<<std::endl;
+                 std::cout<<"*itMBeg_old.x() = "<<(*itMBeg_old).x()<<std::endl;
+                 std::cout<<"*itMBeg.x() = "<<(*itMBeg).x()<<std::endl;
+                 if(x_old_prev != 9999)
+                 if((*itMBeg_old).x()<x_old_prev)
+                 std::cout<<"VIA OLD METHOD: itMBeg is not always ascending"<<std::endl;
+                 x_old_prev=(*itMBeg_old).x();
+                 std::cout<<" "<<std::endl;}
+                 */
+                //TEST ZONE [end]
+                
+                zone_index++;
+                
+                if( itMBeg == itMEnd) continue;
+                if(m_debug )debug()<<"Will Loop over xZones Hits"<<endmsg;
+                for( ; itMBeg!= itMEnd; ++itMBeg){   //--------------------------------------------------------------------FOR
+                    if( (*itMBeg).x() > xMax ) break;
+                    if( (*itMBeg).isUsed() && m_removeFlagged) continue; //Not re use Hits in the middle
+                    if( m_debug) debug()<<"Filling Parabola Seed Hits"<<endmsg;
+                    parabolaSeedHits.push_back( &(*itMBeg) );
                 }//Look for another Hit in last layer
-            }//end loop to pick up Hits in the 2 inner Layers (was only)
-            if(parabolaSeedHits.size()==0){
-                //always()<<"NO ParabolaSeedHits"<<endmsg;
-                continue; //go next last layer hit USELESS if everything works
-            }
+                
+            } //end loop to pick up Hits in the 2 inner Layers (was only)
+            zone_index=0;
+            
+            
+            //-----------------------------------------------------------WORK PLACE------------------------------------------------------------------
+            if(parabolaSeedHits.size()==0) continue; //go next last layer hit
+            
             //if we don't fine any parabola Seed Hits in the middle 2 Layers then search for another XLast Hit
             // sort the parabola seed hits wrt to distance to the linear projection
             // merged parabolaSeedHits T2-1 & T2-2
@@ -1962,20 +2037,20 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                 float c = 0;
                 if(UNLIKELY(m_debug)) debug()<<"Clearing xHits"<<endmsg;
                 xHits.clear();
+                if( m_debug) debug()<<"Hits cleared , will solve parabola "<<endmsg;
                 if(UNLIKELY(m_debug)){
-                    debug()<<"Hits cleared , will solve parabola "<<endmsg;
                     debug()<<"Parabola Solved Par"
                     <<"\n a \t"<<a
                     <<"\n b \t"<<b
                     <<"\n c \t"<<c<<endmsg;
                     debug()<<"1st Hits in parabola"<<endmsg;
-                    printHit(&(*Bounds[0].begin), "First Lay Hit");
+                    printHit(fHit, "First Lay Hit");
                     debug()<<"ParabolaSeed Hit"<<endmsg;
                     printHit(parabolaSeedHits[i]);
                     debug()<<"Last Hit in parabola"<<endmsg;
-                    printHit(&(*Lhit));
+                    printHit(lHit);
                 }
-                solveParabola(fHit,parabolaSeedHits[i],lHit,a,b,c); //Extrapolation with dRatio
+                solveParabola( fHit,parabolaSeedHits[i],lHit,a,b,c); //Extrapolation with dRatio
                 if(UNLIKELY(m_debug)){
                     debug()<<"Parabola Solved Par"
                     <<"\n a \t"<<a
@@ -1993,48 +2068,83 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                 // 1st/last/zone except the parabolaSeedHit
                 //===================================================
                 //Loop on all the xZones
-                //if(UNLIKELY(m_debug)) debug()<<"Loop on xZones   : size = "<<xZones.size()<<endmsg;
-                float dz ;
-                float xAtZ;
-                float xMaxAtZ;
-                float xMinAtZ;
-                PrHit *bestProj;
-                float bestDist;
-                for(int j=2;j<6;j++){ //look in zones except the 1st and last zones
-                    if(UNLIKELY(m_debug)) debug()<<"Selecting ParSeedHits"<<endmsg;
-                    if((int) zones[j]->planeCode() == (int)parabolaSeedHits[i]->planeCode()) continue;
+                if(UNLIKELY(m_debug)) debug()<<"Loop on xZones   : size = "<<xZones.size()<<endmsg;
+                for(auto xZone :xZones){ //look in zones except the 1st and last zones
+                    if (m_debug) debug()<<"Selecting ParSeedHits"<<endmsg;
+                    if( (int)xZone->planeCode() == (int)parabolaSeedHits[i]->planeCode()) continue;
                     // float dz   = xZone->z() - m_geoTool->zReference();
-                    dz = zones[j]->z() - m_zReference;
-                    xAtZ= a * dz * dz * (1. + m_dRatio* dz) + b * dz + c; //with Cubic Correction
-                    xMaxAtZ = xAtZ + m_tolRemaining[iCase];
-                    xMinAtZ = xAtZ - m_tolRemaining[iCase];
-                    bestProj = nullptr;
-                    bestDist = 10.0; // 1 cm
-                    if( UNLIKELY(m_debug)){
-                        if (xMinAtZ > xMaxAtZ){
-                            debug()<<"Bad Settings!!!!!!"<<endmsg;
-                        }
+                    float dz = xZone->z() - m_zReference;
+                    float xAtZ= a * dz * dz * (1. + m_dRatio* dz) + b * dz + c; //with Cubic Correction
+                    float xMaxAtZ = xAtZ + m_tolRemaining[iCase];
+                    float xMinAtZ = xAtZ - m_tolRemaining[iCase];
+                    PrHit* bestProj = nullptr;
+                    float  bestDist = 10.0; // 1 cm
+                    if (xMinAtZ > xMaxAtZ){
+                        if (m_debug) debug()<<"Bad Settings!!!!!!"<<endmsg;
                     }
                     if(UNLIKELY(m_debug)) debug()<<"Get iterator lower bound "<<xMinAtZ<<endmsg;
-                    HitIterat itH, itE;
-                    if(m_log){
-                        itH = m_hitManager->get_lowerBound_log(Bounds_2[j].begin , Bounds_2[j].end, xMinAtZ);
-                        itE = m_hitManager->get_upperBound_log(itH, Bounds_2[j].end, xMaxAtZ);
-                    }else{
-                        itH = m_hitManager->get_lowerBound_lin(Bounds_2[j].begin, Bounds_2[j].end, xMinAtZ);
-                        itE = m_hitManager->get_upperBound_lin( itH, Bounds_2[j].end , xMaxAtZ);
+                    
+                    // auto itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
+                    // auto itHEnd = m_hitManager->getIterator_End( xZone->number());
+                    
+                    
+                    
+                    //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
+                    //Tag: Rabah
+                    // Same as first loop: the tolerance window is constant for each case ==> the previous lower bound SHOULD always be lower than the current one
+                    if(itH_prev[xZone->planeCode()]==m_hitManager->getIterator_End( xZone->number()))
+                    {
+                        
+                        itH = m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ);
+                        itHEnd = m_hitManager->getIterator_End( xZone->number());
                     }
+                    else
+                    {    itH=itH_prev[xZone->planeCode()];
+                        
+                        if(xMinAtZ>xMinAtZ_prev[xZone->planeCode()])
+                        {
+                            while((*itH).x()<xMinAtZ)
+                            {if(itH==m_hitManager->getIterator_End( xZone->number())) break;
+                                else itH++;}
+                        }
+                        else
+                        {
+                            if(xMinAtZ!=xMinAtZ_prev[xZone->planeCode()]) // excluded the case where the bound is not changed from previous
+                            {
+                                while((*itH).x()>xMinAtZ)
+                                {if(itH==m_hitManager->getIterator_Begin( xZone->number())) break;
+                                else itH--;
+                                }
+                                itH++;
+                                
+                            }
+                        }
+                        
+                        itHEnd=m_hitManager->getIterator_End( xZone->number());
+                    }
+                    itH_prev[xZone->planeCode()]=itH;
+                    xMinAtZ_prev[xZone->planeCode()]=xMinAtZ;
+                    
+                    //TEST [start]
+                    /*
+                     if(xZone->planeCode()==3){
+                     std::cout<<"*itH.x() = "<<(*m_hitManager->getIterator_lowerBound( xZone->number(), xMinAtZ)).x()<<std::endl;
+                     std::cout<<"*itH.x() modified = "<<(*itH).x()<<std::endl;
+                     std::cout<<" "<<std::endl;
+                     }*/
+                    //TEST [end]
                     
                     
+                    
+                    //-----------------------------------------------------------------------WORK PLACE -------------------------------------------
                     PrHit* hit;
-                    for( ; itH != itE; ++itH){
+                    //for (; xZone->hits().end() != itH; ++itH){
+                    if(itH == itHEnd) continue;
+                    for( ; itH!=itHEnd; ++itH){
                         hit = &*itH;
-                        if(hit->isUsed() && m_removeFlagged) continue;
-                        // if(hit->x() < xMinAtZ ){
-                        //   //std::cout<<"SKIPP tolerance"<<std::endl;
-                        //   continue;
-                        // }
-                        // if(hit->x() > xMaxAtZ ) break;
+                        if (hit->isUsed() && m_removeFlagged ) continue;
+                        if (hit->x() < xMinAtZ ) continue;
+                        if (hit->x() > xMaxAtZ ) break;
                         //Find hit with best distance
                         if(std::fabs(hit->x() - xAtZ)  <  bestDist){
                             bestDist = std::fabs(hit->x() - xAtZ);
@@ -2045,7 +2155,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                         }
                     }
                     if(bestProj != nullptr){
-                        if(UNLIKELY(m_debug)){ debug()<<"Push back best projection in layer  "<< zones[j]->number()<<endmsg; }
+                        if(UNLIKELY(m_debug)){ debug()<<"Push back best projection in layer  "<< xZone->number()<<endmsg; }
                         xHits.push_back( bestProj);
                     }
                 }//end loop xZones
@@ -2055,10 +2165,25 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                 }
                 // xHits.push_back( parabolaSeedHits[i]);
                 // Add to the xHits Vector the remaining 3 Hits not considered
-                if( xHits.size() < 2 ) continue; //next parabolaSeedHits ; you must find 2 hits
+                if(xHits.size() < 2 ) continue; //next parabolaSeedHits ; you must find 2 hits
                 xHits.push_back(fHit);
                 xHits.push_back(parabolaSeedHits[i]);
                 xHits.push_back(lHit);
+                // if(xHits.size()>6){
+                //   always()<<"Smething goes wrong!!!! in the creation of the xHits list"<<endmsg;
+                //   always()<<"xHits is bigger than 6 : ERROR"<<endmsg;
+                // }
+                //end parabola Seed Hits loop in other Layers
+                //Still in the L0 loop (selection last layer) : 
+                // By Construction here:
+                //at this step we have 1 Hit in 1st Layer
+                //at this step we have 1 Hit in last Layer
+                //at this step we have 1 Hit in Middle Layer
+                //at this step we have Hit in remaining X layers at the
+                //best distance to extrapolated parabola All of them are
+                //inside xHits i want to have at least min_HitXSize
+                //1st Case keep only 6 Hits on found track
+                //2nd Case keep tracks with 4/5/6 hits
                 std::sort(xHits.begin(), xHits.end(), compLHCbID());
                 bool isEqual = false;
                 // Remove xHits in the xHitsLists which are basically the same
@@ -2097,6 +2222,9 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                 PrHybridSeedTrack temp_track( part , m_zReference , xHits);
                 //Setters for it: usefull later to parametrise
                 temp_track.setdRatio(m_dRatio);
+                //-----------------------------------------------------
+                //----------------O-_The Fit_-O------------------
+                //-----------------------------------------------------
                 int nIter = 0;
                 if(UNLIKELY(m_debug) ){ 
                     debug()<<"Attempting to Fit the following Track"<<endmsg; printTrack(temp_track);

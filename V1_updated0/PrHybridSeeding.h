@@ -17,7 +17,7 @@
 #include "Event/MCParticle.h"
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Kernel/ILHCbMagnetSvc.h"
-//#include "PrFTHitManager.h"
+#include "PrKernel/PrHitManager.h"
 //ADDED_Rabah
 #ifndef NLAYERS
 #define NLAYERS 6
@@ -126,21 +126,13 @@ public:
     
 protected:
     //
-    typedef std::vector<PrHit>::iterator HitIterat;
-    typedef std::pair< HitIterat, HitIterat >  IterPairs;
-    typedef std::array< IterPairs, NLAYERS > Boundaries;
-    
-    
-    
-    
     //WHO DEFINED THOSE? (find if they're used anywhere)
     typedef PrHits::iterator HitIter;
-    typedef std::pair<HitIter&,HitIter&> IteratorPair;
+    typedef std::pair<HitIter,HitIter> IteratorPair;
     typedef std::vector< IteratorPair > HitIterPairs;
     //Vector of iterators
-    typedef std::vector<HitIterPairs> HitIteratorsPairs;
+    // typedef std::vector<HitIterPairs> HitIteratorsPairs;
     //Array of vector of iterators
-    
     /** @brief Collect Hits in X layers producing the xz projections
      * @param part (if 1, y<0 ; if 0 , y>0)
      */
@@ -266,40 +258,22 @@ protected:
      */
     void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a1, float& b1, float& c1);
     
-    /// Classe to find lower bound of x of PrHits
-    class lowerBoundX {
-    public:
-        inline bool operator() (const PrHit& lhs, const float testval ) const { return lhs.x() < testval; }
-    };
-    /// Classe to find upper bound of x of PrHits
-    class upperBoundX {
-    public:
-        inline bool operator() (const float testval, const PrHit& rhs) const { return testval < rhs.x(); }
-    };
+    
+    float ParabolicTol(  const PrHit* hitT1 ,  const PrHit* hitT3, float ZToCompute, float zT2, float xT2);
+    
+    
+    
     /// Class to compare x positions of PrHits
-    class compX {
-    public:
-        inline bool operator() (const PrHit& lhs, const PrHit& rhs ) const { return lhs.x() < rhs.x(); }
-    };
-    ///Class to find lower bound of LHCbIDs of PrHits
-    class lowerBoundLHCbID {
-    public:
-        inline bool operator() (const PrHit& lhs, const LHCb::LHCbID id ) const { return lhs.id() < id; }
-    };
-    
-    class compLHCbID {
-    public:
-        //inline bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
-        inline bool operator() ( const PrHit* lhs, const PrHit* rhs) const { return lhs->id() < rhs->id();}
-    };
-    ///Class to compare LHCbIDs of PrHits from detector
-    class compLHCbIDDet {
-    public:
-        //inline bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
-        inline bool operator() ( const PrHit& lhs, const PrHit& rhs) const { return lhs.id() < rhs.id();}
-    };
-    
-    
+    /*
+     std::reverse_iterator<HitIter> revBegin(end);
+     std::reverse_iterator<HitIter> revEnd(begin);
+     std::reverse_iterator<HitIter> revUpper = std::lower_bound(revBegin, revEnd, max_val, compXreverse());
+     HitIter upper_bound = refUpper.base();
+     //LowerBound
+     auto lower_log = std::lower_bound(begin, end, min_val, compX()); // logarithmic
+     auto lower_lin = linear_lower_bound(begin, end, min_val, compX()); // linear
+     // lower_log == lower_lin
+     */
 private:
     //-------------Names for input container(if forward as input), output container name, HitManager name
     
@@ -344,7 +318,7 @@ private:
     std::vector<float> m_alphaCorrection;
     std::vector<float> m_TolFirstLast;
     
-    
+    float m_tolSearch;
     //Add of the third hit in middle layers (p and Pt dependent, i.e., case dependent)
     std::vector<float> m_x0Corr;
     std::vector<float> m_x0SlopeChange;
@@ -391,6 +365,8 @@ private:
     float          m_radiusHole;
     //
     //Triangle Fix
+    bool            m_log;
+    
     bool            m_useFix;
     bool            m_removeHole;
     bool            m_useFix2ndOrder;
@@ -430,7 +406,6 @@ private:
     float m_stateErrorTX2;
     float m_stateErrorTY2;
     ILHCbMagnetSvc* m_magFieldSvc = nullptr;
-    
     //-------------------Containers
     std::array<std::vector<PrHybridSeedTrack>,2>      m_trackCandidates;
     std::array<std::vector<PrHybridSeedTrack>,2>      m_xCandidates;
@@ -473,8 +448,19 @@ private:
     static const unsigned int s_down = 0;
     static const unsigned int s_up   = 1;
     
+    
     //ADDED_Rabah
-public:
+protected:
+    class compLHCbID {
+    public:
+        inline bool operator()(LHCb::LHCbID  lv,  LHCb::LHCbID  rv)  const{return lv < rv;}
+        inline bool operator()(const PrHit& lhs, LHCb::LHCbID  rv)  const{return (*this)(lhs.id(),  rv);}
+        inline bool operator()(LHCb::LHCbID  lv,  const PrHit& rhs) const{return (*this)(lv,        rhs.id());}    
+        inline bool operator()(const PrHit& lhs, const PrHit& rhs) const{return (*this)(lhs.id(),  rhs.id());}
+        inline bool operator()(const PrHit* lhs, LHCb::LHCbID  rv)  const{return (*this)(lhs->id(), rv);}    
+        inline bool operator()(LHCb::LHCbID  lv,  const PrHit* rhs) const{return (*this)(lv,        rhs->id());}
+        inline bool operator()(const PrHit* lhs, const PrHit* rhs) const{return (*this)(lhs->id(), rhs->id());}  
+    };
     
     float computeX(float,float,float,float,   float);
     

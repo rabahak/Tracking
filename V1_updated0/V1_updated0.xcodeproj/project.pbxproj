@@ -10,6 +10,7 @@
 		65FD54FE1D10645A00FB775A /* PrHybridSeeding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrHybridSeeding.h; sourceTree = "<group>"; };
 		65FD55001D1064F300FB775A /* PrHybridSeeding.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PrHybridSeeding.cpp; sourceTree = "<group>"; };
 		65FD55011D10653500FB775A /* PrHitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrHitManager.h; sourceTree = "<group>"; };
+		65FD55021D1066FF00FB775A /* V1_old.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = V1_old.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -17,6 +18,7 @@
 			isa = PBXGroup;
 			children = (
 				65FD55001D1064F300FB775A /* PrHybridSeeding.cpp */,
+				65FD55021D1066FF00FB775A /* V1_old.cpp */,
 				65FD55011D10653500FB775A /* PrHitManager.h */,
 				65FD54FE1D10645A00FB775A /* PrHybridSeeding.h */,
 			);
