@@ -1857,29 +1857,29 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                 
                 //CASE A : log-log (setting .end before .begin) / lin-lin (setting .end before .begin)
                 if( m_log){
-                    if(Bounds[i].end<xMax)//                                  prev_end       end
+                    if(Bounds[i].end->x()<xMax)//                                  prev_end       end
                         Bounds[i].end =     m_hitManager->get_upperBound_log( Bounds[i].end, endsZone[i], xMax);
                     else
-                        if(Bounds[i].end-1 > xMax)//                                 prev_beg        prev_end
+                        if((Bounds[i].end-1)->x() > xMax)//                                 prev_beg        prev_end
                             Bounds[i].end = m_hitManager->get_upperBound_log_reverse(Bounds[i].begin,Bounds[i].end, xMax);
                     
-                    if(Bounds[i].begin<xMin)//                                prev_beg         current_end
+                    if(Bounds[i].begin->x()<xMin)//                                prev_beg         current_end
                         Bounds[i].begin =   m_hitManager->get_lowerBound_log( Bounds[i].begin, Bounds[i].end, xMin );
                     else
-                        if(Bounds[i].begin>xMin)//                                    begin          prev_begin
+                        if(Bounds[i].begin->x()>xMin)//                                    begin          prev_begin
                             Bounds[i].begin=m_hitManager->get_lowerBound_log_reverse( beginsZone[i], Bounds[i].begin, xMin );
                     
                 }else{
-                    if(Bounds[i].end<xMax)//                                  prev_end       end
+                    if(Bounds[i].end->x()<xMax)//                                  prev_end       end
                         Bounds[i].end =     m_hitManager->get_upperBound_lin( Bounds[i].end, endsZone[i], xMax);
                     else
-                        if(Bounds[i].end-1 > xMax)//                                 prev_beg        prev_end
+                        if((Bounds[i].end-1)->x() > xMax)//                                 prev_beg        prev_end
                             Bounds[i].end = m_hitManager->get_upperBound_lin_reverse(Bounds[i].begin,Bounds[i].end, xMax);
                     
-                    if(Bounds[i].begin<xMin)//                                prev_beg         current_end
+                    if(Bounds[i].begin->x()<xMin)//                                prev_beg         current_end
                         Bounds[i].begin =   m_hitManager->get_lowerBound_lin( Bounds[i].begin, Bounds[i].end, xMin );
                     else
-                        if(Bounds[i].begin>xMin)//                                    begin          prev_begin
+                        if(Bounds[i].begin->x()>xMin)//                                    begin          prev_begin
                             Bounds[i].begin=m_hitManager->get_lowerBound_lin_reverse( beginsZone[i], Bounds[i].begin, xMin );
                 }
                 
@@ -2125,26 +2125,26 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase){
                     //make if(bool) ... for one time
                     
                     if( m_log){
-                        if(itE<xMaxAtZ)//                              prev_end       end
+                        if(itE->x()<xMaxAtZ)//                              prev_end       end
                             itE =     m_hitManager->get_upperBound_log(itE,           endsZone[j], xMaxAtZ);
                         else
-                            if(itE-1 > xMaxAtZ)//                              prev_beg        prev_end
+                            if((itE-1)->x() > xMaxAtZ)//                              prev_beg        prev_end
                                 itE = m_hitManager->get_upperBound_log_reverse(itH,            itE, xMaxAtZ);
                         
-                        if(itH<xMin)//                                prev_beg         current_end
+                        if(itH->x()<xMin)//                                prev_beg         current_end
                             itH=   m_hitManager->get_lowerBound_log(  itH,             itE, xMinAtZ );
                         else
-                            if(itH>xMin)//                                    begin          prev_begin
+                            if(itH->x()>xMin)//                                    begin          prev_begin
                                 itH=m_hitManager->get_lowerBound_log_reverse( beginsZone[j], itH, xMinAtZ );
                         
                     }else{
-                        if(itE<xMaxAtZ)//                              prev_end       end
+                        if(itE->x()<xMaxAtZ)//                              prev_end       end
                             itE =     m_hitManager->get_upperBound_lin(itE,           endsZone[j], xMaxAtZ);
                         else
-                            if(itE-1 > xMaxAtZ)//                              prev_beg        prev_end
+                            if((itE-1)->x() > xMaxAtZ)//                              prev_beg        prev_end
                                 itE = m_hitManager->get_upperBound_lin_reverse(itH,            itE, xMaxAtZ);
                         
-                        if(itH<xMin)//                                prev_beg         current_end
+                        if(itH->x()<xMin)//                                prev_beg         current_end
                             itH=   m_hitManager->get_lowerBound_lin(  itH,             itE, xMinAtZ );
                         else
                             if(itH>xMin)//                                    begin          prev_begin
