@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:PrHybridSeeding.cpp">
+   </FileRef>
+   <FileRef
+      location = "group:../../get-pip.py">
+   </FileRef>
+   <FileRef
+      location = "group:PrHybridSeeding.hpp">
+   </FileRef>
+   <FileRef
+      location = "group:PrHitManager.h">
+   </FileRef>
+</Workspace>
